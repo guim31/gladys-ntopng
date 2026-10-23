@@ -10,6 +10,8 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-10-23
+
 ### Added
 
 - One Gladys device per interface ntopng monitors (8 at most): reachable,
@@ -26,3 +28,6 @@ the notes of the version's GitHub Release.
 - API token or user and password, self-signed certificates, refresh every
   30 seconds to 5 minutes, texts and documentation in English, French, German
   and Spanish.
+
+[Unreleased]: https://github.com/guim31/gladys-ntopng/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/guim31/gladys-ntopng/releases/tag/v1.0.0
