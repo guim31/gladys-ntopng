@@ -411,3 +411,51 @@ test('"Test the connection" says what ntopng holds', async (t) => {
     '192.0.2.2: ntopng 7.0.261022 Community answers, 1 interface(s), 6 active host(s), 1 engaged alert(s)',
   );
 });
+
+// --- Found by the review ---------------------------------------------------------
+
+test('a new address during a read: the new ntopng is read at once', async (t) => {
+  const world = await started(t);
+  const reading = world.hub.pollAll();
+  const other = world.hub.reconfigure({ ...world.hub.config, token: 'wrong' });
+  await Promise.all([reading, other]);
+  assert.equal(world.fake.connectionStatus.connected, false);
+  assert.match(world.fake.connectionStatus.message.en, /refused/);
+});
+
+test('ntopng reinstalled: the alert cursor follows its new database', async (t) => {
+  const world = await started(t);
+  assert.equal(world.hub.saved.eth0.flowRowId, 4407);
+  // ntopng restarts with an empty database: uptime back to a few seconds, row ids from 1.
+  world.ntopng.data[0].uptime_sec = 5;
+  world.ntopng.flowAlerts[0] = [flowAlert(1)];
+  world.clock.advance(3600_000);
+  await world.hub.pollAll();
+  assert.equal(world.hub.saved.eth0.flowRowId, 1);
+  world.ntopng.flowAlerts[0].push(flowAlert(2));
+  await world.hub.pollAll();
+  assert.equal(events(world, TRIGGERS.ALERT).length, 1);
+});
+
+test('throughput threshold: a restart during an excess does not repeat "above"', async (t) => {
+  const first = await started(t, { config: config({ rate_threshold_mbps: '10' }) });
+  first.ntopng.setRates(0, 20, 0);
+  await first.hub.pollAll();
+  await first.hub.pollAll();
+  assert.equal(events(first, TRIGGERS.THRESHOLD).length, 1);
+  await first.app.stop();
+  const second = await started(t, {
+    config: config({ rate_threshold_mbps: '10' }),
+    dataDir: first.dataDir,
+    ntopng: first.ntopng,
+  });
+  await second.hub.pollAll();
+  assert.deepEqual(events(second, TRIGGERS.THRESHOLD), []);
+  second.ntopng.setRates(0, 1, 0);
+  await second.hub.pollAll();
+  await second.hub.pollAll();
+  assert.deepEqual(
+    events(second, TRIGGERS.THRESHOLD).map(({ data }) => data.state),
+    ['below'],
+  );
+});

@@ -307,6 +307,9 @@ async function get(hub, { settings, language = 'en' }) {
       language,
     );
   }
+  if (hub.instance.readAt === 0) {
+    return message(TEXT.waiting, language, 30);
+  }
   let views;
   if (chosen) {
     const state = hub.find(chosen);

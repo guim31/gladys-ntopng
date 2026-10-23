@@ -800,7 +800,7 @@
         "de": "Liest eine Schnittstelle für die nächsten Aktionen: Durchsatz, Hosts, Flows, Alarme und eine fertige Zusammenfassung.",
         "es": "Lee una interfaz para las acciones siguientes: caudal, hosts, flujos, alertas y un resumen listo para enviar."
       },
-      "timeout_seconds": 30,
+      "timeout_seconds": 60,
       "fields": [
         {
           "key": "interface",
@@ -948,7 +948,7 @@
         "de": "Listet die aktiven Alarme und die Flow-Alarme der letzten 24 Stunden auf, für eine oder alle Schnittstellen, mit einer fertigen Zusammenfassung.",
         "es": "Enumera las alertas en curso y las alertas de flujo de las últimas 24 horas, en una interfaz o en todas, con un resumen listo para enviar."
       },
-      "timeout_seconds": 30,
+      "timeout_seconds": 60,
       "fields": [
         {
           "key": "interface",

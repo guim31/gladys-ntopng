@@ -96,7 +96,7 @@ export const THRESHOLD_HYSTERESIS = 0.9;
 
 const MAX_STATES_PER_REQUEST = 100;
 
-// Errors that make the interfaces unreachable; a refused token is a
+// Errors worth a quick second read (a blip); a refused token is a
 // configuration problem, told by the connection status.
 const UNREACHABLE_KINDS = new Set([ERROR_KINDS.UNREACHABLE, ERROR_KINDS.STARTING, 'gone']);
 
@@ -143,6 +143,9 @@ export class NtopngHub {
     this.connection = null;
     this.discovered = null;
     this.polling = null;
+    this.pollingClient = null;
+    this.readDenied = false;
+    this.savedJson = null;
     this.pendingDown = false;
     this.pollTimer = null;
     this.retryTimer = null;
@@ -197,8 +200,12 @@ export class NtopngHub {
     if (languageChanged) {
       this.discovered = null;
     }
-    await this.pollAll({ publish: true });
-    this.schedulePoll();
+    try {
+      await this.pollAll({ publish: true });
+    } finally {
+      // Even after an unexpected error: the timer keeps reading.
+      this.schedulePoll();
+    }
   }
 
   async stop() {
@@ -341,15 +348,26 @@ export class NtopngHub {
     if (!this.client) {
       return this.afterChanges(false, { publish });
     }
-    const client = this.client;
-    this.polling ??= this.read(client)
-      .then(async (changed) => {
-        this.forgetStale();
-        await this.afterChanges(changed, { publish });
-      })
-      .finally(() => {
-        this.polling = null;
-      });
+    // Concurrent calls share the read, unless the configuration changed
+    // meanwhile: then a read with the new client follows the old one.
+    if (!this.polling || this.pollingClient !== this.client) {
+      const client = this.client;
+      const previous = this.polling ?? Promise.resolve();
+      const run = previous
+        .catch(() => {})
+        .then(() => this.read(client))
+        .then(async (changed) => {
+          this.forgetStale();
+          await this.afterChanges(changed, { publish });
+        })
+        .finally(() => {
+          if (this.polling === run) {
+            this.polling = null;
+          }
+        });
+      this.polling = run;
+      this.pollingClient = client;
+    }
     return publish ? this.polling.then(() => this.publishDevices({ force: true })) : this.polling;
   }
 
@@ -377,6 +395,7 @@ export class NtopngHub {
       return false;
     }
     let changed = this.instance.error !== null || this.instance.readAt === 0;
+    this.readDenied = false;
     if (this.instance.error) {
       logger.info('ntopng answers again');
     }
@@ -402,8 +421,26 @@ export class NtopngHub {
     if (results.some(Boolean)) {
       changed = true;
     }
-    this.store.save({ interfaces: this.saved });
+    // One line when the alerts become unreadable, one when they are back.
+    if (this.readDenied !== this.instance.alertsDenied) {
+      this.instance.alertsDenied = this.readDenied;
+      if (this.readDenied) {
+        logger.warn('This ntopng user may not read the alerts: no alert events');
+      } else {
+        logger.info('The alerts can be read again');
+      }
+    }
+    this.saveIfChanged();
     return changed;
+  }
+
+  /** Write /data only when something changed (an SD card wears out). */
+  saveIfChanged() {
+    const json = JSON.stringify(this.saved);
+    if (json !== this.savedJson) {
+      this.savedJson = json;
+      this.store.save({ interfaces: this.saved });
+    }
   }
 
   interfaceState(entry, order) {
@@ -465,12 +502,17 @@ export class NtopngHub {
     if (state.error === 'gone') {
       logger.info(`Interface ${state.name} is back`);
     }
+    if (state.readAt === 0) {
+      // A restart during an excess: "back below" still comes, "above" not twice.
+      state.above = saved.above === true;
+    }
     state.snapshot = parseSnapshot(data);
     state.error = null;
     state.failures = 0;
     state.down = false;
     state.readAt = now;
-    saved.seenAt = now;
+    saved.seenAt = day(now);
+    await this.checkRestart(client, state, saved, flows);
     if (engaged !== null && (await this.compareEngaged(state, saved, engaged))) {
       changed = true;
     }
@@ -479,27 +521,50 @@ export class NtopngHub {
     }
     await this.compareHosts(state, saved, hosts, refreshHosts);
     await this.checkThreshold(state);
+    saved.above = state.above;
     await this.publishInterfaceStates(state);
     return changed;
+  }
+
+  /**
+   * ntopng restarted (its start time moved): its alert database may have been
+   * reset (reinstalled, container without volume), and its row ids start
+   * again from 1, below the cursor. Read the newest row then, and go back to it.
+   */
+  async checkRestart(client, state, saved, flows) {
+    const uptime = state.snapshot.uptimeSeconds;
+    if (uptime === null) {
+      return;
+    }
+    const startedAt = Math.round((this.now() / 1000 - uptime) / 600) * 600;
+    const restarted =
+      Number.isFinite(saved.startedAt) && Math.abs(startedAt - saved.startedAt) > 600;
+    saved.startedAt = Number.isFinite(saved.startedAt) && !restarted ? saved.startedAt : startedAt;
+    const cursor = cursorOf(saved);
+    if (!restarted || !cursor || flows === null || flows.records.length > 0) {
+      return;
+    }
+    try {
+      const newest = await client.flowAlerts(state.ifid, null);
+      const top = parseAlert(newest.records[0] ?? {}, 'flow').rowId ?? 0;
+      if (top < cursor) {
+        logger.info(`${state.name}: the alert database of ntopng starts again`);
+        saved.flowRowId = top;
+      }
+    } catch (err) {
+      logger.debug(`${state.name}: newest flow alert unreadable (${err.message})`);
+    }
   }
 
   /** The alert lists need the "alerts" right: without it, the rest still works. */
   async optional(promise) {
     try {
-      const result = await promise;
-      if (this.instance.alertsDenied) {
-        this.instance.alertsDenied = false;
-        logger.info('The alerts can be read again');
-      }
-      return result;
+      return await promise;
     } catch (err) {
       if (err.kind !== ERROR_KINDS.NOT_GRANTED) {
         throw err;
       }
-      if (!this.instance.alertsDenied) {
-        this.instance.alertsDenied = true;
-        logger.warn('This ntopng user may not read the alerts: no alert events');
-      }
+      this.readDenied = true;
       return null;
     }
   }
@@ -614,7 +679,7 @@ export class NtopngHub {
 
   /** Fire an alert event, unless the same one fired within the cooldown. */
   async fireAlert(state, alert, count) {
-    const key = `${state.key}|${alert.family}|${alert.typeId}|${alert.host}`;
+    const key = `${state.key}|${alert.key}`;
     const now = this.now();
     if (now - (this.cooldowns.get(key) ?? -Infinity) < this.timings.alertCooldownMs) {
       return false;
@@ -662,7 +727,8 @@ export class NtopngHub {
           });
         }
       }
-      next[key] = now;
+      // A day is enough to forget a host after months, and spares /data a write per read.
+      next[key] = day(now);
     }
     // Forget the hosts not seen for months; keep the most recent ones at most.
     const entriesKept = Object.entries(next)
@@ -679,7 +745,11 @@ export class NtopngHub {
   async checkThreshold(state) {
     const threshold = this.config.thresholdMbps;
     const { downloadMbps, uploadMbps } = state.snapshot;
-    if (threshold === null || downloadMbps === null || uploadMbps === null) {
+    if (threshold === null) {
+      state.above = false;
+      return;
+    }
+    if (downloadMbps === null || uploadMbps === null) {
       return;
     }
     const total = downloadMbps + uploadMbps;
@@ -743,10 +813,7 @@ export class NtopngHub {
     if (wasError !== kind && kind === 'gone') {
       logger.warn(`Interface ${state.name}: ${pick(ERROR_TEXT.gone, 'en')}`);
     }
-    if (!UNREACHABLE_KINDS.has(kind)) {
-      state.failures = 0;
-      return wasError !== kind;
-    }
+    // Any failure counts: a refused token leaves no fresh value either.
     state.failures += 1;
     if (!state.down && state.failures >= this.timings.downAfterFailures) {
       state.down = true;
@@ -1001,6 +1068,9 @@ export class NtopngHub {
 }
 
 /** Where the flow alert log of an interface stands, null before the first read. */
+const DAY_MS = 24 * 3600_000;
+const day = (time) => Math.floor(time / DAY_MS) * DAY_MS;
+
 function cursorOf(saved) {
   return Number.isInteger(saved.flowRowId) ? saved.flowRowId : null;
 }
