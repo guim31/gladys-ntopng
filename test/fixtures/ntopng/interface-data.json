@@ -1,0 +1,124 @@
+{
+  "rc": 0,
+  "rc_str_hr": "Success",
+  "rsp": {
+    "ifid": "0",
+    "epoch": 1792779014,
+    "engaged_alerts_error": 1,
+    "bytes_download": 788548,
+    "num_hosts": 6,
+    "num_flows": 24,
+    "num_local_hosts_anomalies": 0,
+    "vs_in_progress": 0,
+    "active_discovery_active": false,
+    "engaged_alerts_notice": 0,
+    "tot_pkt_drops": 0,
+    "ifname": "eth0",
+    "download_upload_chart": {
+      "upload": [
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 6, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 64
+      ],
+      "download": [
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 66
+      ]
+    },
+    "alerted_flows_notice": 6,
+    "hosts_pctg": 1,
+    "tcpPacketStats": {
+      "retransmissions": 0,
+      "lost": 230,
+      "out_of_order": 0
+    },
+    "engaged_alerts": 1,
+    "packets": 22846,
+    "throughput_pps": 0.0,
+    "throughput": {
+      "upload": {
+        "bps": 0.0,
+        "pps": 0.0
+      },
+      "download": {
+        "bps": 0.0,
+        "pps": 0.0
+      }
+    },
+    "throughput_bps": 0.0,
+    "alerted_flows_error": 16,
+    "num_remote_hosts_anomalies": 0,
+    "alerted_flows_warning": 0,
+    "localtime": "18:10:14 +0000",
+    "packets_download_since_reset": 12003,
+    "tot_nprobe_pkts": 0,
+    "packets_upload_since_reset": 10843,
+    "host_dropped_alerts": 0,
+    "num_live_captures": 0,
+    "other_dropped_alerts": 1,
+    "bytes_upload_since_reset": 2055621,
+    "num_rcvd_only_hosts": 0,
+    "packets_download": 12003,
+    "drops": 0,
+    "remote_pps": 0,
+    "cacheUpdates": {
+      "sites_update": false,
+      "snmp_update": false,
+      "exporters_update": false
+    },
+    "num_deduplicated_flows": 0,
+    "speed": 10000,
+    "packets_upload": 10843,
+    "dropped_alerts": 4916,
+    "bytes_download_since_reset": 788548,
+    "num_devices": 5,
+    "flows_pctg": 1,
+    "num_local_rcvd_only_hosts": 0,
+    "bytes": 2844169,
+    "local2remote": 2424,
+    "num_local_hosts": 6,
+    "bytes_upload": 2055621,
+    "is_view": false,
+    "remote_bps": 0,
+    "flow_dropped_alerts": 4915,
+    "system_host_stats": {
+      "mem_ntopng_virtual": 837552,
+      "cpu_states": {
+        "steal": 0.0,
+        "softirq": 1.5856777493606,
+        "guest": 0.0,
+        "user": 28.695652173913,
+        "idle": 53.938618925831,
+        "iowait": 7.7237851662404,
+        "system": 7.5191815856777,
+        "irq": 0.0,
+        "nice": 0.53708439897698,
+        "guest_nice": 0.0
+      },
+      "mem_free": 302432,
+      "alerts_stats": {
+        "alert_queues": {
+          "internal_alerts_queue": {
+            "pct_not_enqueued": 0
+          }
+        }
+      },
+      "alerts_queries": 45,
+      "mem_cached": 6128624,
+      "mem_used": 7895368,
+      "mem_shmem": 0,
+      "written_alerts": 0,
+      "dropped_alerts": 4916,
+      "mem_buffers": 564892,
+      "cpu_load": 1.8200000524521,
+      "mem_sreclaimable": 1258800,
+      "mem_total": 16150116,
+      "mem_ntopng_resident": 241992
+    },
+    "uptime": "04:31",
+    "uptime_sec": 271,
+    "macs_pctg": 1,
+    "remote2local": 3498,
+    "engaged_alerts_warning": 0,
+    "periodic_stats_update_frequency_secs": 5,
+    "alerted_flows": 22
+  },
+  "rc_str": "OK"
+}

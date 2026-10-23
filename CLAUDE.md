@@ -32,15 +32,21 @@ pushing.
 
 ```
 index.js                          SDK wiring only: handlers registered before connect()
-src/devices/index.js              registry of the device blueprints + dispatch helpers
-src/devices/<type>.js             one device type per file (buildDevice, onPoll, onSetValue...)
+src/app.js                        registers every SDK handler on the hub (tests drive the same wiring)
+src/hub.js                        ntopng instance, interfaces, polling timer, states, scene events
+src/devices.js                    the interface device: feature blueprint, ids, values
+src/ntopng/client.js              ntopng REST API v2 (interfaces, data, alerts, hosts), errors
+src/ntopng/model.js               raw answers -> interfaces, snapshot, alerts, hosts, severities
+src/ntopng/http.js                the one function that talks to the network (test seam)
 src/scenes.js                     scene action handlers (manifest `scene_actions`)
 src/widgets.js                    dashboard widget handlers (manifest `widgets`)
+src/texts.js                      every text sent to Gladys, in en/fr/de/es
 src/config.js                     DEFAULT_CONFIG (mirrors the manifest defaults) + normalization
-src/weather.js                    example driver (Open-Meteo)
+src/store.js, src/logs.js         /data persistence (alert cursor, engaged alerts, hosts), quiet logs
 gladys-assistant-integration.json manifest: name, config_schema, actions, image...
-docs/en.md, docs/fr.md            user documentation, re-hosted by Gladys (mandatory)
-test/                             node --test, against the SDK's fake Gladys (integration-sdk/testing)
+docs/{en,fr,de,es}.md             user documentation, re-hosted by Gladys (same sections)
+test/                             node --test, against the SDK's fake Gladys and a fake ntopng
+test/fixtures/ntopng/             real answers of ntopng 7.0 Community, anonymized
 .github/scripts/release.mjs       release helpers (manifest bump, changelog), tested in test/
 ```
 
@@ -70,8 +76,9 @@ test/                             node --test, against the SDK's fake Gladys (in
   `type: "provider"`: 5.1.0). `test/manifest.test.js` ties the manifest to the
   code (defaults, action, scene and widget handlers): change both sides
   together.
-- **User-facing text** is bilingual (English and French): action messages,
-  manifest texts, and `docs/en.md` / `docs/fr.md`, kept in sync.
+- **User-facing text** exists in English, French, German and Spanish: action
+  messages, manifest texts, widget texts, feature names, and
+  `docs/{en,fr,de,es}.md`, kept in sync (`test/i18n.test.js`).
 - **Style.** Prettier formats, ESLint catches mistakes. Comments explain why,
   in English. Tests never touch the network.
 
@@ -233,3 +240,40 @@ long, et sur un « Sie »/« Ihr… » de politesse en allemand. Le store exige 
 - Docs `en`, `fr`, `de`, `es` avec les mêmes sections.
 - Chauffe, ouverture, sécurité : ne rien rendre pilotable « comme un thermostat » ou par un assistant
   vocal quand une erreur serait dangereuse (leçon d'OctoPrint).
+
+## ntopng (propre à cette intégration)
+
+- **API lue** : REST v2 (`/lua/rest/v2/...`), réponses `{ rc, rc_str, rsp }`, `rc` 0 = succès. Vérifiée sur
+  ntopng 7.0.261022 Community (image `ntop/ntopng:latest`, seul tag publié, build Enterprise/Pro lancé avec
+  `--community`). Authentification : `Authorization: Token <jeton>` (jeton par utilisateur, fenêtre utilisateur →
+  onglet du jeton, ou `POST create/ntopng/api_token.lua`) ou HTTP Basic.
+- **Pas de 401 en cas d'échec d'authentification** : un 302 vers `login.lua`. Tant que le mot de passe `admin`
+  par défaut n'est pas changé, **toute** requête, même authentifiée, part en 302 vers `change_password.lua`
+  (drapeau Redis `ntopng.prefs.admin_password_changed`). `NOT_GRANTED` arrive en **HTTP 401 avec un corps
+  JSON** (`rc` -3) : à lire avant de conclure à un mot de passe refusé. Au démarrage, ntopng répond 503 avec
+  une page HTML « We're almost ready ».
+- **Keep-alive** : ntopng ferme la connexion après chaque réponse ; Node 24 réutilise les sockets par défaut,
+  d'où un `ECONNRESET` une requête sur deux. `http.js` passe `agent: false`. Le faux ntopng des tests ne peut
+  pas le montrer : trouvé seulement contre le vrai service.
+- `interface/data.lua?ifid=N` : `throughput.{download,upload}.bps`, `num_hosts`, `num_local_hosts`,
+  `num_flows`, `engaged_alerts` et `engaged_alerts_{notice,warning,error}`, `alerted_flows` et
+  `alerted_flows_{notice,warning,error}` (le groupe error compte aussi critical et emergency). Un `ifid`
+  inconnu : `rc_str` `INVALID_INTERFACE` en HTTP 200.
+- **Alertes** : les alertes de flux ne sont jamais « engagées » ; elles vont directement en base (SQLite en
+  Community). Lecture incrémentale par `row_id=<n>;gt&sort=rowid&order=desc&length=200` (le filtre
+  `valeur;opérateur` est celui de l'interface ; `sort=row_id` est ignoré, `rowid` marche). Un `nmap` en écrit
+  une par sonde (« Probing Attempt », gravité 5) : d'où le regroupement par (type, hôte) et la temporisation
+  d'une heure. Les alertes d'hôte et d'interface engagées se lisent par `status=engaged` (en mémoire, `row_id`
+  = simple index) ; elles ne sont écrites en base qu'à leur fin : ne pas les relire en base, sinon double
+  événement. Aucune alerte d'hôte ne s'est levée dans le réseau de test : leur forme vient du source
+  (`host_alert_store.lua` : `ip.value`, `ip.label_long`).
+- Un client en HTTP Basic fait lever par ntopng « Clear-Text Credentials » sur le réseau qu'il surveille (vu
+  en test) : le jeton est recommandé.
+- **Nouveaux hôtes** : `host/active_list.lua?mode=local&sort=first_seen&order=desc&length=50`, toute la liste
+  (1000) une fois par heure. Clé = MAC, sinon IP. ntopng garde un hôte par IP tant qu'il n'est pas inactif : un
+  appareil qui reprend aussitôt l'IP d'un autre garde l'ancienne MAC dans ntopng et n'est pas annoncé (vu
+  avec Docker qui réattribue les IP).
+- **Test sans toucher au réseau de la machine** : `ntop/ntopng` sur un réseau Docker en pont dédié, `-i eth0`
+  (sa propre interface de conteneur), trafic et `nmap` depuis d'autres conteneurs du même réseau, aucun port
+  publié. Le mot de passe admin se change dans le Redis du conteneur
+  (`ntopng.user.admin.password` = md5, `ntopng.prefs.admin_password_changed` = 1) puis `docker restart`.

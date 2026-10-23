@@ -1,177 +1,1005 @@
 {
   "manifest_version": 1,
   "type": "device",
-  "name": "Demo Devices Template",
+  "name": "ntopng",
   "description": {
-    "en": "Starter template showing sensors, a switch, a dimmable light and a smart plug.",
-    "fr": "Template de démarrage : capteurs, interrupteur, lampe variable et prise connectée."
+    "en": "ntopng in Gladys: network throughput, active hosts and flows, alerts and new hosts.",
+    "fr": "ntopng dans Gladys : débit réseau, hôtes et flux actifs, alertes et nouveaux hôtes.",
+    "de": "ntopng in Gladys: Netzwerkdurchsatz, aktive Hosts und Flows, Alarme und neue Hosts.",
+    "es": "ntopng en Gladys: caudal de red, hosts y flujos activos, alertas y nuevos hosts."
   },
   "version": "1.0.0",
-  "docker_image": "ghcr.io/gladysassistant/integration-template-js:1.0.0",
+  "docker_image": "ghcr.io/guim31/gladys-ntopng:1.0.0",
   "gladys_version": ">=5.1.0",
-  "cover_image": "https://raw.githubusercontent.com/GladysAssistant/integration-template-js/master/cover.png",
-  "categories": ["lighting", "security", "environment"],
-  "transports": ["local", "cloud"],
+  "cover_image": "https://raw.githubusercontent.com/guim31/gladys-ntopng/main/cover.png",
+  "categories": ["network", "security"],
+  "transports": ["local"],
   "config_schema": [
     {
       "key": "intro",
       "type": "section",
-      "label": { "en": "Getting started", "fr": "Pour commencer" },
+      "label": {
+        "en": "Your ntopng",
+        "fr": "Votre ntopng",
+        "de": "Dein ntopng",
+        "es": "Su ntopng"
+      },
       "description": {
-        "en": "The demo weather station reads real data from the free Open-Meteo API: pick the coordinates to observe. No account, no API key.",
-        "fr": "La station météo de démonstration lit de vraies données via l'API gratuite Open-Meteo : choisissez les coordonnées à observer. Pas de compte, pas de clé d'API."
+        "en": "Enter the address of ntopng and an API token (or a user and password). Every interface ntopng monitors becomes a device: add the ones you want from the Discover tab. The Community edition is enough.",
+        "fr": "Saisissez l'adresse de ntopng et un jeton d'API (ou un utilisateur et son mot de passe). Chaque interface surveillée par ntopng devient un appareil : ajoutez celles voulues depuis l'onglet Découverte. L'édition Community suffit.",
+        "de": "Gib die Adresse von ntopng und ein API-Token (oder Benutzer und Passwort) ein. Jede von ntopng überwachte Schnittstelle wird ein Gerät: Füge die gewünschten im Tab „Entdecken“ hinzu. Die Community-Edition genügt.",
+        "es": "Introduzca la dirección de ntopng y un token de API (o un usuario y su contraseña). Cada interfaz que supervisa ntopng se convierte en un dispositivo: añada las que quiera desde la pestaña Descubrir. Basta con la edición Community."
       },
       "links": [
         {
-          "url": "https://open-meteo.com/en/docs",
-          "label": { "en": "Open-Meteo documentation", "fr": "Documentation Open-Meteo" }
+          "url": "https://github.com/guim31/gladys-ntopng/blob/main/docs/en.md",
+          "label": {
+            "en": "Setup guide",
+            "fr": "Guide d'installation",
+            "de": "Installationsanleitung",
+            "es": "Guía de instalación"
+          }
         }
       ]
     },
     {
-      "key": "latitude",
-      "type": "number",
-      "label": { "en": "Latitude", "fr": "Latitude" },
-      "description": {
-        "en": "Latitude used for the demo weather sensor.",
-        "fr": "Latitude utilisée par le capteur météo de démonstration."
+      "key": "url",
+      "type": "string",
+      "label": {
+        "en": "ntopng address",
+        "fr": "Adresse de ntopng",
+        "de": "ntopng-Adresse",
+        "es": "Dirección de ntopng"
       },
-      "placeholder": { "en": "e.g. 48.8566", "fr": "ex. 48.8566" },
-      "required": true,
-      "default": 48.8566,
-      "min": -90,
-      "max": 90
-    },
-    {
-      "key": "longitude",
-      "type": "number",
-      "label": { "en": "Longitude", "fr": "Longitude" },
-      "description": {
-        "en": "Longitude used for the demo weather sensor.",
-        "fr": "Longitude utilisée par le capteur météo de démonstration."
-      },
-      "placeholder": { "en": "e.g. 2.3522", "fr": "ex. 2.3522" },
-      "required": true,
-      "default": 2.3522,
-      "min": -180,
-      "max": 180
-    },
-    {
-      "key": "unit",
-      "type": "select",
-      "label": { "en": "Temperature unit", "fr": "Unité de température" },
       "required": false,
-      "default": "celsius",
+      "placeholder": {
+        "en": "192.168.1.20",
+        "fr": "192.168.1.20",
+        "de": "192.168.1.20",
+        "es": "192.168.1.20"
+      },
+      "description": {
+        "en": "Port 3000 by default: 192.168.1.20, ntop.lan or https://ntop.lan:3001.",
+        "fr": "Port 3000 par défaut : 192.168.1.20, ntop.lan ou https://ntop.lan:3001.",
+        "de": "Standardmäßig Port 3000: 192.168.1.20, ntop.lan oder https://ntop.lan:3001.",
+        "es": "Puerto 3000 por defecto: 192.168.1.20, ntop.lan o https://ntop.lan:3001."
+      }
+    },
+    {
+      "key": "api_token",
+      "type": "secret",
+      "label": {
+        "en": "API token",
+        "fr": "Jeton d'API",
+        "de": "API-Token",
+        "es": "Token de API"
+      },
+      "required": false,
+      "description": {
+        "en": "Recommended. In ntopng: user menu (top right) → your user → token tab → Generate.",
+        "fr": "Recommandé. Dans ntopng : menu utilisateur (en haut à droite) → votre utilisateur → onglet du jeton → Générer.",
+        "de": "Empfohlen. In ntopng: Benutzermenü (oben rechts) → dein Benutzer → Token-Tab → Erzeugen.",
+        "es": "Recomendado. En ntopng: menú de usuario (arriba a la derecha) → su usuario → pestaña del token → Generar."
+      }
+    },
+    {
+      "key": "username",
+      "type": "string",
+      "label": {
+        "en": "User (without token)",
+        "fr": "Utilisateur (sans jeton)",
+        "de": "Benutzer (ohne Token)",
+        "es": "Usuario (sin token)"
+      },
+      "required": false,
+      "placeholder": {
+        "en": "admin",
+        "fr": "admin",
+        "de": "admin",
+        "es": "admin"
+      },
+      "description": {
+        "en": "Only without an API token: an ntopng user that may read the alerts.",
+        "fr": "Seulement sans jeton d'API : un utilisateur ntopng qui a le droit de lire les alertes.",
+        "de": "Nur ohne API-Token: ein ntopng-Benutzer, der die Alarme lesen darf.",
+        "es": "Solo sin token de API: un usuario de ntopng que pueda leer las alertas."
+      }
+    },
+    {
+      "key": "password",
+      "type": "secret",
+      "label": {
+        "en": "Password (without token)",
+        "fr": "Mot de passe (sans jeton)",
+        "de": "Passwort (ohne Token)",
+        "es": "Contraseña (sin token)"
+      },
+      "required": false
+    },
+    {
+      "key": "options",
+      "type": "section",
+      "label": {
+        "en": "Options",
+        "fr": "Options",
+        "de": "Optionen",
+        "es": "Opciones"
+      },
+      "description": {
+        "en": "Only the interfaces added to Gladys receive values; the scene triggers work for every interface.",
+        "fr": "Seules les interfaces ajoutées à Gladys reçoivent des valeurs ; les déclencheurs de scène fonctionnent pour toutes.",
+        "de": "Nur die zu Gladys hinzugefügten Schnittstellen erhalten Werte; die Szenen-Auslöser funktionieren für alle.",
+        "es": "Solo las interfaces añadidas a Gladys reciben valores; los disparadores de escena funcionan para todas."
+      }
+    },
+    {
+      "key": "poll_interval",
+      "type": "select",
+      "label": {
+        "en": "Refresh interval",
+        "fr": "Intervalle de rafraîchissement",
+        "de": "Aktualisierungsintervall",
+        "es": "Intervalo de actualización"
+      },
+      "description": {
+        "en": "How often ntopng is read.",
+        "fr": "Fréquence de lecture de ntopng.",
+        "de": "Wie oft ntopng gelesen wird.",
+        "es": "Con qué frecuencia se lee ntopng."
+      },
+      "required": false,
+      "default": "60",
       "options": [
-        { "value": "celsius", "label": { "en": "Celsius", "fr": "Celsius" } },
-        { "value": "fahrenheit", "label": { "en": "Fahrenheit", "fr": "Fahrenheit" } }
+        {
+          "value": "30",
+          "label": {
+            "en": "30 seconds",
+            "fr": "30 secondes",
+            "de": "30 Sekunden",
+            "es": "30 segundos"
+          }
+        },
+        {
+          "value": "60",
+          "label": {
+            "en": "1 minute",
+            "fr": "1 minute",
+            "de": "1 Minute",
+            "es": "1 minuto"
+          }
+        },
+        {
+          "value": "120",
+          "label": {
+            "en": "2 minutes",
+            "fr": "2 minutes",
+            "de": "2 Minuten",
+            "es": "2 minutos"
+          }
+        },
+        {
+          "value": "300",
+          "label": {
+            "en": "5 minutes",
+            "fr": "5 minutes",
+            "de": "5 Minuten",
+            "es": "5 minutos"
+          }
+        }
       ]
     },
     {
-      "key": "poll_frequency",
-      "type": "number",
-      "label": { "en": "Refresh interval (s)", "fr": "Intervalle de rafraîchissement (s)" },
-      "description": {
-        "en": "How often sensors are polled, in seconds (one minute minimum).",
-        "fr": "Fréquence d'interrogation des capteurs, en secondes (une minute minimum)."
+      "key": "rate_threshold_mbps",
+      "type": "string",
+      "label": {
+        "en": "Throughput threshold (Mbit/s)",
+        "fr": "Seuil de débit (Mbit/s)",
+        "de": "Durchsatz-Schwellwert (Mbit/s)",
+        "es": "Umbral de caudal (Mbit/s)"
       },
       "required": false,
-      "default": 300,
-      "min": 60,
-      "max": 3600
+      "placeholder": {
+        "en": "e.g. 80",
+        "fr": "ex. 80",
+        "de": "z. B. 80",
+        "es": "p. ej. 80"
+      },
+      "description": {
+        "en": "For the scene trigger \"Throughput above the threshold\": download plus upload of an interface, in Mbit/s. Empty: off.",
+        "fr": "Pour le déclencheur « Débit au-dessus du seuil » : réception plus émission d'une interface, en Mbit/s. Vide : désactivé.",
+        "de": "Für den Szenen-Auslöser „Durchsatz über dem Schwellwert“: Empfang plus Senden einer Schnittstelle, in Mbit/s. Leer: aus.",
+        "es": "Para el disparador «Caudal por encima del umbral»: recepción más envío de una interfaz, en Mbit/s. Vacío: desactivado."
+      }
+    },
+    {
+      "key": "allow_self_signed",
+      "type": "boolean",
+      "label": {
+        "en": "Accept self-signed certificates",
+        "fr": "Accepter les certificats auto-signés",
+        "de": "Selbstsignierte Zertifikate akzeptieren",
+        "es": "Aceptar certificados autofirmados"
+      },
+      "description": {
+        "en": "Only for an https:// address: the certificate ntopng ships with is self-signed.",
+        "fr": "Seulement pour une adresse en https:// : le certificat fourni avec ntopng est auto-signé.",
+        "de": "Nur für eine https://-Adresse: Das mit ntopng gelieferte Zertifikat ist selbstsigniert.",
+        "es": "Solo para una dirección https://: el certificado que trae ntopng es autofirmado."
+      },
+      "required": false,
+      "default": false
+    },
+    {
+      "key": "language",
+      "type": "select",
+      "label": {
+        "en": "Language of the names",
+        "fr": "Langue des noms",
+        "de": "Sprache der Namen",
+        "es": "Idioma de los nombres"
+      },
+      "description": {
+        "en": "Language of the feature names (set when a device is added), of the scene texts and of the connection test.",
+        "fr": "Langue des noms des fonctionnalités (fixés à l'ajout d'un appareil), des textes de scène et du test de connexion.",
+        "de": "Sprache der Funktionsnamen (beim Hinzufügen eines Geräts festgelegt), der Szenentexte und des Verbindungstests.",
+        "es": "Idioma de los nombres de las funciones (fijados al añadir un dispositivo), de los textos de escena y de la prueba de conexión."
+      },
+      "required": false,
+      "default": "fr",
+      "options": [
+        {
+          "value": "en",
+          "label": {
+            "en": "English",
+            "fr": "English",
+            "de": "English",
+            "es": "English"
+          }
+        },
+        {
+          "value": "fr",
+          "label": {
+            "en": "Français",
+            "fr": "Français",
+            "de": "Français",
+            "es": "Français"
+          }
+        },
+        {
+          "value": "de",
+          "label": {
+            "en": "Deutsch",
+            "fr": "Deutsch",
+            "de": "Deutsch",
+            "es": "Deutsch"
+          }
+        },
+        {
+          "value": "es",
+          "label": {
+            "en": "Español",
+            "fr": "Español",
+            "de": "Español",
+            "es": "Español"
+          }
+        }
+      ]
     }
   ],
   "actions": [
     {
-      "key": "test_weather",
-      "label": { "en": "Test the weather provider", "fr": "Tester le fournisseur météo" },
-      "timeout_seconds": 30
-    },
+      "key": "test_connection",
+      "label": {
+        "en": "Test the connection",
+        "fr": "Tester la connexion",
+        "de": "Verbindung testen",
+        "es": "Probar la conexión"
+      },
+      "description": {
+        "en": "Reads ntopng now and says what it found.",
+        "fr": "Lit ntopng maintenant et dit ce qu'il a trouvé.",
+        "de": "Liest ntopng jetzt und sagt, was gefunden wurde.",
+        "es": "Lee ntopng ahora e indica lo que ha encontrado."
+      },
+      "timeout_seconds": 60
+    }
+  ],
+  "widgets": [
     {
-      "key": "identify",
-      "label": { "en": "Identify a device", "fr": "Identifier un appareil" },
-      "fields": [
+      "key": "traffic",
+      "label": {
+        "en": "ntopng traffic",
+        "fr": "Trafic ntopng",
+        "de": "ntopng-Verkehr",
+        "es": "Tráfico ntopng"
+      },
+      "icon": "activity",
+      "description": {
+        "en": "Throughput, hosts and flows of an interface, with its engaged and recent alerts.",
+        "fr": "Débit, hôtes et flux d'une interface, avec ses alertes en cours et récentes.",
+        "de": "Durchsatz, Hosts und Flows einer Schnittstelle mit ihren aktiven und letzten Alarmen.",
+        "es": "Caudal, hosts y flujos de una interfaz, con sus alertas en curso y recientes."
+      },
+      "settings": [
         {
-          "key": "device",
+          "key": "interface",
           "type": "select",
           "source": "devices",
-          "label": { "en": "Device", "fr": "Appareil" },
-          "required": true
+          "required": false,
+          "label": {
+            "en": "Interface",
+            "fr": "Interface",
+            "de": "Schnittstelle",
+            "es": "Interfaz"
+          },
+          "description": {
+            "en": "Empty: every interface (the only one if there is one).",
+            "fr": "Vide : toutes les interfaces (la seule s'il n'y en a qu'une).",
+            "de": "Leer: alle Schnittstellen (die einzige, wenn es nur eine gibt).",
+            "es": "Vacío: todas las interfaces (la única si solo hay una)."
+          }
         }
-      ]
+      ],
+      "action_timeout_seconds": 30
     }
   ],
   "scene_triggers": [
     {
-      "key": "motion_detected",
-      "label": { "en": "Motion detected", "fr": "Mouvement détecté" },
+      "key": "alert_raised",
+      "label": {
+        "en": "New ntopng alert",
+        "fr": "Nouvelle alerte ntopng",
+        "de": "Neuer ntopng-Alarm",
+        "es": "Nueva alerta de ntopng"
+      },
       "description": {
-        "en": "A demo motion sensor saw a person or an animal move.",
-        "fr": "Un détecteur de démonstration a vu bouger une personne ou un animal."
+        "en": "ntopng raises an alert on a host, a flow or an interface. The same alert fires once an hour at most.",
+        "fr": "ntopng lève une alerte sur un hôte, un flux ou une interface. La même alerte se déclenche au plus une fois par heure.",
+        "de": "ntopng meldet einen Alarm zu einem Host, einem Flow oder einer Schnittstelle. Derselbe Alarm löst höchstens einmal pro Stunde aus.",
+        "es": "ntopng genera una alerta sobre un host, un flujo o una interfaz. La misma alerta se dispara como máximo una vez por hora."
       },
       "fields": [
         {
-          "key": "device",
+          "key": "interface",
           "type": "select",
           "source": "devices",
-          "label": { "en": "Sensor", "fr": "Détecteur" }
+          "label": {
+            "en": "Interface",
+            "fr": "Interface",
+            "de": "Schnittstelle",
+            "es": "Interfaz"
+          },
+          "description": {
+            "en": "An ntopng interface. Empty: every interface, added to Gladys or not.",
+            "fr": "Une interface ntopng. Vide : toutes les interfaces, ajoutées à Gladys ou non.",
+            "de": "Eine ntopng-Schnittstelle. Leer: alle Schnittstellen, ob zu Gladys hinzugefügt oder nicht.",
+            "es": "Una interfaz de ntopng. Vacío: todas las interfaces, añadidas a Gladys o no."
+          }
         },
         {
-          "key": "target",
+          "key": "severity",
           "type": "multi_select",
-          "label": { "en": "What moved", "fr": "Ce qui a bougé" },
+          "label": {
+            "en": "Severity",
+            "fr": "Gravité",
+            "de": "Schweregrad",
+            "es": "Gravedad"
+          },
+          "description": {
+            "en": "Empty: every severity.",
+            "fr": "Vide : toutes les gravités.",
+            "de": "Leer: jeder Schweregrad.",
+            "es": "Vacío: cualquier gravedad."
+          },
           "options": [
-            { "value": "person", "label": { "en": "Person", "fr": "Personne" } },
-            { "value": "animal", "label": { "en": "Animal", "fr": "Animal" } }
+            {
+              "value": "info",
+              "label": {
+                "en": "Info",
+                "fr": "Info",
+                "de": "Info",
+                "es": "Info"
+              }
+            },
+            {
+              "value": "notice",
+              "label": {
+                "en": "Notice",
+                "fr": "Avis",
+                "de": "Hinweis",
+                "es": "Aviso"
+              }
+            },
+            {
+              "value": "warning",
+              "label": {
+                "en": "Warning",
+                "fr": "Avertissement",
+                "de": "Warnung",
+                "es": "Advertencia"
+              }
+            },
+            {
+              "value": "error",
+              "label": {
+                "en": "Error",
+                "fr": "Erreur",
+                "de": "Fehler",
+                "es": "Error"
+              }
+            },
+            {
+              "value": "critical",
+              "label": {
+                "en": "Critical",
+                "fr": "Critique",
+                "de": "Kritisch",
+                "es": "Crítica"
+              }
+            },
+            {
+              "value": "emergency",
+              "label": {
+                "en": "Emergency",
+                "fr": "Urgence",
+                "de": "Notfall",
+                "es": "Emergencia"
+              }
+            }
+          ]
+        },
+        {
+          "key": "alert_type",
+          "type": "string",
+          "label": {
+            "en": "Alert type (optional)",
+            "fr": "Type d'alerte (facultatif)",
+            "de": "Alarmtyp (optional)",
+            "es": "Tipo de alerta (opcional)"
+          },
+          "placeholder": {
+            "en": "Probing Attempt",
+            "fr": "Probing Attempt",
+            "de": "Probing Attempt",
+            "es": "Probing Attempt"
+          },
+          "description": {
+            "en": "The name ntopng gives the alert, in English, exactly. Empty: every type.",
+            "fr": "Le nom que ntopng donne à l'alerte, en anglais, à l'identique. Vide : tous les types.",
+            "de": "Der Name, den ntopng dem Alarm gibt, auf Englisch, genau so. Leer: jeder Typ.",
+            "es": "El nombre que ntopng da a la alerta, en inglés, tal cual. Vacío: cualquier tipo."
+          }
+        },
+        {
+          "key": "host",
+          "type": "string",
+          "label": {
+            "en": "Host IP address (optional)",
+            "fr": "Adresse IP de l'hôte (facultatif)",
+            "de": "IP-Adresse des Hosts (optional)",
+            "es": "Dirección IP del host (opcional)"
+          },
+          "placeholder": {
+            "en": "192.168.1.42",
+            "fr": "192.168.1.42",
+            "de": "192.168.1.42",
+            "es": "192.168.1.42"
+          },
+          "description": {
+            "en": "Empty: every host.",
+            "fr": "Vide : tous les hôtes.",
+            "de": "Leer: alle Hosts.",
+            "es": "Vacío: todos los hosts."
+          }
+        }
+      ],
+      "variables": [
+        {
+          "key": "interface_name",
+          "type": "string",
+          "label": {
+            "en": "Interface",
+            "fr": "Interface",
+            "de": "Schnittstelle",
+            "es": "Interfaz"
+          }
+        },
+        {
+          "key": "alert_type",
+          "type": "string",
+          "label": {
+            "en": "Alert type",
+            "fr": "Type d'alerte",
+            "de": "Alarmtyp",
+            "es": "Tipo de alerta"
+          }
+        },
+        {
+          "key": "severity_label",
+          "type": "string",
+          "label": {
+            "en": "Severity",
+            "fr": "Gravité",
+            "de": "Schweregrad",
+            "es": "Gravedad"
+          }
+        },
+        {
+          "key": "origin",
+          "type": "string",
+          "label": {
+            "en": "Raised on",
+            "fr": "Levée sur",
+            "de": "Ausgelöst bei",
+            "es": "Generada en"
+          }
+        },
+        {
+          "key": "host",
+          "type": "string",
+          "label": {
+            "en": "Host IP address",
+            "fr": "Adresse IP de l'hôte",
+            "de": "IP-Adresse des Hosts",
+            "es": "Dirección IP del host"
+          }
+        },
+        {
+          "key": "host_name",
+          "type": "string",
+          "label": {
+            "en": "Host name",
+            "fr": "Nom de l'hôte",
+            "de": "Hostname",
+            "es": "Nombre del host"
+          }
+        },
+        {
+          "key": "description",
+          "type": "string",
+          "label": {
+            "en": "Description",
+            "fr": "Description",
+            "de": "Beschreibung",
+            "es": "Descripción"
+          }
+        },
+        {
+          "key": "count",
+          "type": "number",
+          "label": {
+            "en": "Occurrences",
+            "fr": "Occurrences",
+            "de": "Vorkommen",
+            "es": "Ocurrencias"
+          }
+        }
+      ]
+    },
+    {
+      "key": "new_local_host",
+      "label": {
+        "en": "New local host",
+        "fr": "Nouvel hôte local",
+        "de": "Neuer lokaler Host",
+        "es": "Nuevo host local"
+      },
+      "description": {
+        "en": "ntopng sees a local host never seen before (by MAC address, else IP address).",
+        "fr": "ntopng voit un hôte local jamais vu auparavant (par adresse MAC, sinon adresse IP).",
+        "de": "ntopng sieht einen noch nie gesehenen lokalen Host (nach MAC-Adresse, sonst IP-Adresse).",
+        "es": "ntopng ve un host local nunca visto antes (por dirección MAC, si no por dirección IP)."
+      },
+      "fields": [
+        {
+          "key": "interface",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Interface",
+            "fr": "Interface",
+            "de": "Schnittstelle",
+            "es": "Interfaz"
+          },
+          "description": {
+            "en": "An ntopng interface. Empty: every interface, added to Gladys or not.",
+            "fr": "Une interface ntopng. Vide : toutes les interfaces, ajoutées à Gladys ou non.",
+            "de": "Eine ntopng-Schnittstelle. Leer: alle Schnittstellen, ob zu Gladys hinzugefügt oder nicht.",
+            "es": "Una interfaz de ntopng. Vacío: todas las interfaces, añadidas a Gladys o no."
+          }
+        }
+      ],
+      "variables": [
+        {
+          "key": "interface_name",
+          "type": "string",
+          "label": {
+            "en": "Interface",
+            "fr": "Interface",
+            "de": "Schnittstelle",
+            "es": "Interfaz"
+          }
+        },
+        {
+          "key": "ip",
+          "type": "string",
+          "label": {
+            "en": "IP address",
+            "fr": "Adresse IP",
+            "de": "IP-Adresse",
+            "es": "Dirección IP"
+          }
+        },
+        {
+          "key": "mac",
+          "type": "string",
+          "label": {
+            "en": "MAC address",
+            "fr": "Adresse MAC",
+            "de": "MAC-Adresse",
+            "es": "Dirección MAC"
+          }
+        },
+        {
+          "key": "host_name",
+          "type": "string",
+          "label": {
+            "en": "Host name",
+            "fr": "Nom de l'hôte",
+            "de": "Hostname",
+            "es": "Nombre del host"
+          }
+        }
+      ]
+    },
+    {
+      "key": "throughput_threshold",
+      "label": {
+        "en": "Throughput above the threshold",
+        "fr": "Débit au-dessus du seuil",
+        "de": "Durchsatz über dem Schwellwert",
+        "es": "Caudal por encima del umbral"
+      },
+      "description": {
+        "en": "Download plus upload goes above the threshold of the configuration (two reads in a row), or back below 90 % of it.",
+        "fr": "Réception plus émission passe au-dessus du seuil de la configuration (deux lectures de suite), ou revient sous 90 % de celui-ci.",
+        "de": "Empfang plus Senden steigt über den Schwellwert der Konfiguration (zwei Lesungen hintereinander) oder fällt unter 90 % davon.",
+        "es": "Recepción más envío supera el umbral de la configuración (dos lecturas seguidas), o vuelve por debajo del 90 % de este."
+      },
+      "fields": [
+        {
+          "key": "interface",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Interface",
+            "fr": "Interface",
+            "de": "Schnittstelle",
+            "es": "Interfaz"
+          },
+          "description": {
+            "en": "An ntopng interface. Empty: every interface, added to Gladys or not.",
+            "fr": "Une interface ntopng. Vide : toutes les interfaces, ajoutées à Gladys ou non.",
+            "de": "Eine ntopng-Schnittstelle. Leer: alle Schnittstellen, ob zu Gladys hinzugefügt oder nicht.",
+            "es": "Una interfaz de ntopng. Vacío: todas las interfaces, añadidas a Gladys o no."
+          }
+        },
+        {
+          "key": "state",
+          "type": "select",
+          "label": {
+            "en": "Change",
+            "fr": "Changement",
+            "de": "Änderung",
+            "es": "Cambio"
+          },
+          "description": {
+            "en": "Empty: both.",
+            "fr": "Vide : les deux.",
+            "de": "Leer: beide.",
+            "es": "Vacío: ambos."
+          },
+          "options": [
+            {
+              "value": "above",
+              "label": {
+                "en": "Above the threshold",
+                "fr": "Au-dessus du seuil",
+                "de": "Über dem Schwellwert",
+                "es": "Por encima del umbral"
+              }
+            },
+            {
+              "value": "below",
+              "label": {
+                "en": "Back below",
+                "fr": "Revenu en dessous",
+                "de": "Wieder darunter",
+                "es": "De nuevo por debajo"
+              }
+            }
           ]
         }
       ],
       "variables": [
         {
-          "key": "target",
+          "key": "interface_name",
           "type": "string",
-          "label": { "en": "What moved", "fr": "Ce qui a bougé" }
+          "label": {
+            "en": "Interface",
+            "fr": "Interface",
+            "de": "Schnittstelle",
+            "es": "Interfaz"
+          }
+        },
+        {
+          "key": "state_label",
+          "type": "string",
+          "label": {
+            "en": "Change",
+            "fr": "Changement",
+            "de": "Änderung",
+            "es": "Cambio"
+          }
+        },
+        {
+          "key": "download_mbps",
+          "type": "number",
+          "label": {
+            "en": "Download (Mbit/s)",
+            "fr": "Réception (Mbit/s)",
+            "de": "Empfang (Mbit/s)",
+            "es": "Recepción (Mbit/s)"
+          }
+        },
+        {
+          "key": "upload_mbps",
+          "type": "number",
+          "label": {
+            "en": "Upload (Mbit/s)",
+            "fr": "Émission (Mbit/s)",
+            "de": "Senden (Mbit/s)",
+            "es": "Envío (Mbit/s)"
+          }
+        },
+        {
+          "key": "total_mbps",
+          "type": "number",
+          "label": {
+            "en": "Total (Mbit/s)",
+            "fr": "Total (Mbit/s)",
+            "de": "Gesamt (Mbit/s)",
+            "es": "Total (Mbit/s)"
+          }
+        },
+        {
+          "key": "threshold_mbps",
+          "type": "number",
+          "label": {
+            "en": "Threshold (Mbit/s)",
+            "fr": "Seuil (Mbit/s)",
+            "de": "Schwellwert (Mbit/s)",
+            "es": "Umbral (Mbit/s)"
+          }
         }
       ]
     }
   ],
   "scene_actions": [
     {
-      "key": "identify_device",
-      "label": { "en": "Identify a device", "fr": "Identifier un appareil" },
-      "description": {
-        "en": "Make a device signal itself (the demo light blinks).",
-        "fr": "Fait se signaler un appareil (la lampe de démonstration clignote)."
+      "key": "get_interface_status",
+      "label": {
+        "en": "State of an ntopng interface",
+        "fr": "État d'une interface ntopng",
+        "de": "Zustand einer ntopng-Schnittstelle",
+        "es": "Estado de una interfaz de ntopng"
       },
-      "timeout_seconds": 15,
+      "description": {
+        "en": "Reads an interface for the next actions: throughput, hosts, flows, alerts, and a ready-made summary.",
+        "fr": "Lit une interface pour les actions suivantes : débit, hôtes, flux, alertes, et un résumé prêt à envoyer.",
+        "de": "Liest eine Schnittstelle für die nächsten Aktionen: Durchsatz, Hosts, Flows, Alarme und eine fertige Zusammenfassung.",
+        "es": "Lee una interfaz para las acciones siguientes: caudal, hosts, flujos, alertas y un resumen listo para enviar."
+      },
+      "timeout_seconds": 60,
       "fields": [
         {
-          "key": "device",
+          "key": "interface",
           "type": "select",
           "source": "devices",
-          "label": { "en": "Device", "fr": "Appareil" },
-          "required": true
+          "required": true,
+          "label": {
+            "en": "Interface",
+            "fr": "Interface",
+            "de": "Schnittstelle",
+            "es": "Interfaz"
+          },
+          "description": {
+            "en": "An ntopng interface.",
+            "fr": "Une interface ntopng.",
+            "de": "Eine ntopng-Schnittstelle.",
+            "es": "Una interfaz de ntopng."
+          }
         }
       ],
       "outputs": [
         {
-          "key": "signalled",
+          "key": "name",
+          "type": "string",
+          "label": {
+            "en": "Interface",
+            "fr": "Interface",
+            "de": "Schnittstelle",
+            "es": "Interfaz"
+          }
+        },
+        {
+          "key": "online",
           "type": "boolean",
-          "label": { "en": "Device signalled", "fr": "Appareil signalé" }
+          "label": {
+            "en": "Reachable",
+            "fr": "Joignable",
+            "de": "Erreichbar",
+            "es": "Accesible"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          }
+        },
+        {
+          "key": "download_mbps",
+          "type": "number",
+          "label": {
+            "en": "Download (Mbit/s)",
+            "fr": "Réception (Mbit/s)",
+            "de": "Empfang (Mbit/s)",
+            "es": "Recepción (Mbit/s)"
+          }
+        },
+        {
+          "key": "upload_mbps",
+          "type": "number",
+          "label": {
+            "en": "Upload (Mbit/s)",
+            "fr": "Émission (Mbit/s)",
+            "de": "Senden (Mbit/s)",
+            "es": "Envío (Mbit/s)"
+          }
+        },
+        {
+          "key": "hosts",
+          "type": "number",
+          "label": {
+            "en": "Active hosts",
+            "fr": "Hôtes actifs",
+            "de": "Aktive Hosts",
+            "es": "Hosts activos"
+          }
+        },
+        {
+          "key": "local_hosts",
+          "type": "number",
+          "label": {
+            "en": "Local hosts",
+            "fr": "Hôtes locaux",
+            "de": "Lokale Hosts",
+            "es": "Hosts locales"
+          }
+        },
+        {
+          "key": "flows",
+          "type": "number",
+          "label": {
+            "en": "Active flows",
+            "fr": "Flux actifs",
+            "de": "Aktive Flows",
+            "es": "Flujos activos"
+          }
+        },
+        {
+          "key": "engaged_alerts",
+          "type": "number",
+          "label": {
+            "en": "Engaged alerts",
+            "fr": "Alertes en cours",
+            "de": "Aktive Alarme",
+            "es": "Alertas en curso"
+          }
+        },
+        {
+          "key": "alerted_flows",
+          "type": "number",
+          "label": {
+            "en": "Alerted flows",
+            "fr": "Flux en alerte",
+            "de": "Flows mit Alarm",
+            "es": "Flujos con alerta"
+          }
+        },
+        {
+          "key": "highest_severity",
+          "type": "string",
+          "label": {
+            "en": "Highest severity",
+            "fr": "Gravité la plus haute",
+            "de": "Höchster Schweregrad",
+            "es": "Gravedad más alta"
+          }
         }
       ]
-    }
-  ],
-  "widgets": [
+    },
     {
-      "key": "demo_status",
-      "label": { "en": "Demo status", "fr": "État de la démo" },
-      "description": {
-        "en": "Live temperature and plug power, plug connection and observed location.",
-        "fr": "Température et puissance en direct, connexion de la prise, position observée."
+      "key": "get_recent_alerts",
+      "label": {
+        "en": "Recent ntopng alerts",
+        "fr": "Alertes ntopng récentes",
+        "de": "Letzte ntopng-Alarme",
+        "es": "Alertas recientes de ntopng"
       },
-      "icon": "activity",
-      "action_timeout_seconds": 15
+      "description": {
+        "en": "Lists the engaged alerts and the flow alerts of the last 24 hours, on one interface or all, with a ready-made summary.",
+        "fr": "Liste les alertes en cours et les alertes de flux des dernières 24 heures, sur une interface ou toutes, avec un résumé prêt à envoyer.",
+        "de": "Listet die aktiven Alarme und die Flow-Alarme der letzten 24 Stunden auf, für eine oder alle Schnittstellen, mit einer fertigen Zusammenfassung.",
+        "es": "Enumera las alertas en curso y las alertas de flujo de las últimas 24 horas, en una interfaz o en todas, con un resumen listo para enviar."
+      },
+      "timeout_seconds": 60,
+      "fields": [
+        {
+          "key": "interface",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Interface",
+            "fr": "Interface",
+            "de": "Schnittstelle",
+            "es": "Interfaz"
+          },
+          "description": {
+            "en": "Empty: every interface.",
+            "fr": "Vide : toutes les interfaces.",
+            "de": "Leer: alle Schnittstellen.",
+            "es": "Vacío: todas las interfaces."
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "key": "count",
+          "type": "number",
+          "label": {
+            "en": "Alerts",
+            "fr": "Alertes",
+            "de": "Alarme",
+            "es": "Alertas"
+          }
+        },
+        {
+          "key": "engaged",
+          "type": "number",
+          "label": {
+            "en": "Engaged alerts",
+            "fr": "Alertes en cours",
+            "de": "Aktive Alarme",
+            "es": "Alertas en curso"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          }
+        }
+      ]
     }
   ]
 }

@@ -1,0 +1,56 @@
+{
+  "recordsTotal": 1,
+  "rc_str_hr": "Success",
+  "rsp": {
+    "stats": [],
+    "records": [
+      {
+        "alert_category": {
+          "label": "Other",
+          "icon": "fas fa-scroll"
+        },
+        "severity": {
+          "value": 5,
+          "label": "<i class='fas fa-exclamation-triangle text-danger' style='color: #ff3231!important' title='Error'></i> ",
+          "color": "#ff3231"
+        },
+        "row_id": 1,
+        "alert_name": "Dropped Alerts",
+        "msg": {
+          "value": 4099,
+          "name": "Dropped Alerts",
+          "configset_ref": " <a href=\"/lua/admin/edit_configset.lua?subdir=all&check=Dropped+Alerts#all\"><i class=\"fas fa-cog\" title=\"Edit Configuration\"></i></a>",
+          "fullname": "Dropped Alerts",
+          "description": "Interface <a href=\"/lua/if_stats.lua?ifid=0\">eth0</a> is dropping alerts. Likely it is generating too many of them, or recipients are slow."
+        },
+        "tstamp": {
+          "value": 1792778964,
+          "label": "18:09:24",
+          "highlight": "#ff3231",
+          "title": "18:09:24 - 18:10:14"
+        },
+        "duration": 50,
+        "count": 1,
+        "subtype": {
+          "value": "eth0",
+          "name": "eth0"
+        },
+        "family": "interface",
+        "is_engaged": true,
+        "score": {
+          "value": 100,
+          "label": "100",
+          "color": "#ff3231"
+        },
+        "alert_id": {
+          "value": 4099,
+          "label": "Dropped Alerts"
+        },
+        "description": "Interface <a href=\"/lua/if_stats.lua?ifid=0\">eth0</a> is dropping alerts. Likely it is generating too many of them, or recipients are slow."
+      }
+    ]
+  },
+  "rc": 0,
+  "rc_str": "OK",
+  "recordsFiltered": 1
+}

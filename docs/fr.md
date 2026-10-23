@@ -1,67 +1,173 @@
-# Template de démonstration
+# ntopng
 
-Ceci est la documentation utilisateur de l'intégration. Gladys ré-héberge ce
-fichier et affiche un lien **Documentation** permanent vers lui dans l'écran
-de configuration (dans la langue de l'utilisateur, avec l'anglais en repli) —
-c'est au moment de configurer que l'utilisateur en a le plus besoin. Gardez
-les courtes indications d'accueil dans les blocs `section` du `config_schema`
-du manifest ; mettez ici le pas-à-pas détaillé (captures d'écran, dépannage…).
+[ntopng](https://www.ntop.org/products/traffic-analysis/ntop/) observe le trafic
+d'une interface réseau (un port miroir, le côté LAN d'un routeur, un serveur de
+la maison) et dit qui parle à qui, combien, et ce qui paraît suspect. Cette
+intégration l'amène dans Gladys : un appareil par interface surveillée par
+ntopng, avec ses débits en réception et en émission, ses hôtes et flux actifs,
+et ses alertes. Des scènes peuvent réagir à une nouvelle alerte ntopng, à un
+hôte local jamais vu, ou à un débit qui dépasse un seuil, et un widget de
+tableau de bord montre le trafic et les alertes d'un coup d'œil. Tout reste sur
+votre réseau local.
 
-## Ce que vous obtenez
+Testée contre un vrai ntopng 7.0 Community (Docker), avec du trafic et un
+balayage de ports entre conteneurs de test. Pas encore sur un vrai réseau
+domestique : vos retours sont bienvenus dans
+[les issues](https://github.com/guim31/gladys-ntopng/issues).
 
-Six appareils de démonstration apparaissent après l'installation : une
-station météo (vraies données Open-Meteo), un interrupteur, une lampe
-variable, une prise connectée avec mesure de puissance, un détecteur de
-mouvement et une caméra.
+## Ce qu'il vous faut
 
-## Configuration
+- Gladys Assistant 5.1.0 ou plus récent.
+- ntopng 6 ou 7 (l'édition gratuite **Community** suffit), joignable depuis la
+  machine de Gladys (port 3000 par défaut).
+- Un utilisateur ntopng qui a le droit de lire les alertes (un administrateur,
+  ou un utilisateur avec le droit « alertes »), et de préférence son jeton
+  d'API.
 
-1. Ouvrez l'onglet **Configuration** de l'intégration.
-2. Renseignez la **latitude** et la **longitude** que la station météo de
-   démonstration doit observer (Paris par défaut), et choisissez votre unité
-   de température. L'**intervalle de rafraîchissement** règle la fréquence
-   de lecture de la station météo et de la puissance de la prise : toutes
-   les 5 minutes par défaut, toutes les minutes au plus.
-3. Enregistrez : les appareils apparaissent dans l'onglet **Découverte**,
-   prêts à être ajoutés.
+L'intégration ne fait que lire : elle ne change jamais rien dans ntopng.
 
-Le réglage **Préférer la connexion locale** pilote la prise de
-démonstration : elle affiche en badge le canal réellement utilisé (local ou
-cloud), avec un point orange quand elle fonctionne en mode dégradé (local
-refusé, bascule cloud).
+## Mise en route
 
-## Actions
+### 1. Obtenir un jeton d'API
 
-- **Tester le fournisseur météo** — effectue une requête en direct vers
-  Open-Meteo et affiche la température et l'humidité actuelles sous le
-  bouton.
-- **Identifier un appareil** — choisissez un de vos appareils dans la liste
-  et il se signale (la lampe de démonstration « clignote » dans les logs).
+Ouvrez ntopng dans un navigateur (`http://<machine>:3000`). Sur une installation
+neuve, ntopng demande d'abord de changer le mot de passe `admin` par défaut :
+faites-le, l'API reste fermée jusque-là. Ouvrez ensuite le menu utilisateur (en
+haut à droite) → votre nom d'utilisateur → l'onglet du jeton → **Generate**, et
+copiez le jeton.
 
-## Scènes
+### 2. Configurer l'intégration
 
-L'intégration ajoute ses propres cartes à l'éditeur de scènes (Gladys 5.1
-ou plus récent), dans la catégorie **Intégrations** :
+Dans Gladys, **Intégrations → ntopng → Configuration** :
 
-- **Mouvement détecté** (déclencheur) — lance la scène quand un détecteur
-  de démonstration voit bouger quelque chose. Choisissez éventuellement le
-  détecteur et ce qui a bougé (personne, animal) ; laissés vides, toute
-  détection correspond. Les actions suivantes peuvent lire ce qui a bougé
-  avec `{{triggerEvent.data.target}}`.
-- **Identifier un appareil** (action) — fait se signaler l'appareil choisi.
-  Elle indique si l'appareil a pu se signaler, pour que les actions
-  suivantes puissent en dépendre.
+- **Adresse de ntopng** : `192.168.1.20`, `ntop.lan`, ou l'adresse affichée par
+  votre navigateur, comme `https://ntop.lan:3001` (port 3000 si aucun n'est
+  indiqué).
+- **Jeton d'API** : le jeton de l'étape 1. Sans jeton, remplissez
+  **Utilisateur (sans jeton)** et **Mot de passe (sans jeton)**.
+- **Intervalle de rafraîchissement** : 1 minute par défaut (de 30 secondes à
+  5 minutes).
+- **Seuil de débit (Mbit/s)** : seulement pour le déclencheur « Débit au-dessus
+  du seuil » ; sinon, laissez vide.
+- **Accepter les certificats auto-signés** : seulement pour une adresse en
+  `https://`, le certificat fourni avec ntopng étant auto-signé.
+- **Langue des noms** : la langue des noms des fonctionnalités et des textes de
+  scène.
+
+Cliquez ensuite sur **Tester la connexion** : il donne la version de ntopng,
+les interfaces, les hôtes actifs et les alertes en cours.
+
+### 3. Ajouter les interfaces
+
+Dans l'onglet **Découverte**, ajoutez les interfaces à suivre. Seules les
+interfaces ajoutées reçoivent des valeurs ; les déclencheurs de scène
+fonctionnent pour toutes.
+
+## Les appareils
+
+Un appareil par interface, nommé `ntopng <interface>` :
+
+| Fonctionnalité        | Ce qu'elle montre                                                             |
+| --------------------- | ----------------------------------------------------------------------------- |
+| Joignable             | ntopng répond et surveille encore l'interface                                 |
+| Réception             | trafic reçu, en Mbit/s                                                        |
+| Émission              | trafic envoyé, en Mbit/s                                                      |
+| Hôtes actifs          | hôtes vus sur l'interface en ce moment                                        |
+| Hôtes locaux          | ceux d'entre eux qui sont dans vos réseaux locaux                             |
+| Flux actifs           | connexions suivies en ce moment                                               |
+| Alertes en cours      | alertes que ntopng tient ouvertes sur des hôtes ou sur l'interface            |
+| Flux en alerte        | flux actifs porteurs d'une alerte (un balayage de ports en lève des milliers) |
+| Gravité la plus haute | la pire d'entre elles : Aucune, Avis, Avertissement ou Erreur                 |
+
+Les débits et les flux sont envoyés au plus une fois par minute ; les autres
+valeurs quand elles changent.
 
 ## Tableau de bord
 
-Ajoutez le widget **État de la démo** à un tableau de bord : il affiche en
-direct la température de la station météo et la puissance de la prise du
-bureau, la connexion utilisée par la prise (en orange si dégradée) et la
-position observée. Son bouton **Identifier la lampe** fait se signaler la
-lampe de démonstration.
+Le widget **Trafic ntopng** montre, pour une interface (celle choisie dans ses
+réglages, ou la seule), la réception, l'émission, les hôtes, les flux et les
+alertes en cours, puis la liste des alertes : celles en cours d'abord, les plus
+graves en tête, puis les alertes de flux des dernières 24 heures avec leur
+nombre. Avec plusieurs interfaces et aucune choisie, il montre les totaux et une
+ligne par interface. Le bouton **Actualiser** relit ntopng.
+
+## Scènes
+
+### Déclencheurs
+
+- **Nouvelle alerte ntopng** : ntopng lève une alerte sur un hôte, un flux ou
+  une interface. Filtres : interface, gravité, type d'alerte (le nom anglais
+  affiché par ntopng, comme `Probing Attempt`), adresse IP de l'hôte.
+  Variables : interface, type d'alerte, gravité, levée sur, adresse IP et nom
+  de l'hôte, description, occurrences. Un balayage de ports écrit une alerte de
+  flux par sonde : elles sont regroupées par type et par hôte, et la même alerte
+  se déclenche au plus une fois par heure.
+- **Nouvel hôte local** : ntopng voit un hôte local jamais vu auparavant, par
+  son adresse MAC (sinon son adresse IP). Variables : interface, adresse IP,
+  adresse MAC, nom de l'hôte. Les hôtes connus au démarrage de l'intégration ne
+  sont pas annoncés.
+- **Débit au-dessus du seuil** : réception plus émission d'une interface passe
+  au-dessus du seuil de la configuration deux lectures de suite, ou revient
+  sous 90 % de celui-ci. Filtre : le changement. Variables : réception,
+  émission, total et seuil en Mbit/s.
+
+Pour suivre la présence de vos appareils, [NetAlertX](https://github.com/guim31/gladys-netalertx)
+fait mieux (balayages, présence par appareil) ; ntopng ne voit que les hôtes qui
+font passer du trafic par l'interface qu'il surveille.
+
+### Actions
+
+- **État d'une interface ntopng** : lit une interface pour les actions
+  suivantes : réception, émission, hôtes, flux, alertes, gravité la plus haute,
+  et un résumé prêt à envoyer comme `eth0 : réception 12,3 Mbit/s, émission
+1,5 Mbit/s, 24 hôte(s), 310 flux, aucune alerte`.
+- **Alertes ntopng récentes** : les alertes en cours et les alertes de flux des
+  dernières 24 heures, sur une interface ou toutes, avec leur nombre et un
+  résumé.
+
+### Idées de scènes
+
+- **Nouvelle alerte ntopng**, gravité **Erreur** → envoyer le message
+  `{{triggerEvent.data.alert_type}} sur {{triggerEvent.data.host}} ({{triggerEvent.data.count}} fois)`.
+- **Nouvel hôte local** → envoyer `Nouvel appareil : {{triggerEvent.data.host_name}} {{triggerEvent.data.ip}} {{triggerEvent.data.mac}}`.
+- **Débit au-dessus du seuil** la nuit → mettre les sauvegardes en pause, et les
+  reprendre sur « Revenu en dessous ».
+- Chaque soir à 21 h → **Alertes ntopng récentes** → si le nombre dépasse 0,
+  envoyer le résumé.
 
 ## Dépannage
 
-L'intégration journalise tout ce qu'elle fait : consultez les logs de
-l'intégration depuis l'interface Gladys (ou `docker logs` sur l'hôte) avec
-`LOG_LEVEL=debug` pour le détail complet.
+- **« ne répond pas »** : vérifiez l'adresse et le port dans un navigateur ; un
+  pare-feu peut bloquer le port 3000.
+- **« connectez-vous une fois à ntopng et changez le mot de passe admin par
+  défaut »** : ntopng renvoie chaque requête vers la page du mot de passe tant
+  que celui d'`admin` n'est pas changé.
+- **« jeton d'API ou mot de passe refusé »** : générez un nouveau jeton, ou
+  vérifiez l'utilisateur et le mot de passe.
+- **« cet utilisateur ntopng n'a pas le droit de lire les alertes »** : les
+  valeurs arrivent quand même, mais aucun événement d'alerte : donnez le droit
+  « alertes » à l'utilisateur, ou utilisez un administrateur.
+- **« l'adresse redirige »** : ntopng ne sert que du HTTPS : saisissez
+  l'adresse en `https://` (port 3001 par défaut).
+- **ntopng lève « Clear-Text Credentials » pour Gladys** : avec un utilisateur
+  et un mot de passe en HTTP, ntopng voit passer le mot de passe en clair sur le
+  réseau qu'il surveille. Utilisez un jeton d'API, ou le HTTPS.
+- **ntopng en Docker ne montre presque rien** : il surveille son propre
+  conteneur ; lancez-le avec `--network host` (sur la machine qui voit le
+  trafic) ou sur un port miroir.
+- Plus de détails avec la variable d'environnement `LOG_LEVEL=debug` sur
+  l'intégration.
+
+## Limites
+
+- Une seule instance ntopng, 8 interfaces au plus.
+- Sont lues les alertes en cours (hôtes, interface) et les alertes de flux ; les
+  autres familles d'alertes de ntopng (réseaux, système, SNMP de l'édition
+  Enterprise) ne le sont pas.
+- Les événements d'alertes de flux demandent le stockage SQLite des éditions
+  Community et Pro ; avec ClickHouse (Enterprise), ils sont désactivés.
+- Conçue pour l'édition Community : les fonctions des éditions payantes
+  (politiques de trafic, SNMP, nProbe) ne sont pas lues.
+- L'intégration lit les valeurs courantes à chaque rafraîchissement : elle
+  n'importe pas l'historique de ntopng.
+- Sans lien avec ntop.
