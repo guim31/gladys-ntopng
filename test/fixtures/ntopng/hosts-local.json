@@ -1,0 +1,237 @@
+{
+  "rc_str_hr": "Success",
+  "rc_str": "OK",
+  "rc": 0,
+  "recordsTotal": 6,
+  "rsp": [
+    {
+      "first_seen": 1792778899,
+      "alerts": 0,
+      "score": 59,
+      "num_flows": 0,
+      "throughput": {
+        "bps": 0.0,
+        "type": "bps",
+        "pps": 0.0,
+        "trend": 3
+      },
+      "hostname": {
+        "alt_name": "",
+        "name": "laptop.lan"
+      },
+      "isBlocked": false,
+      "bytes": {
+        "rcvd": 324804,
+        "sent": 331754,
+        "total": 656558
+      },
+      "host": {
+        "os": 5,
+        "vlan": {
+          "id": 0,
+          "name": ""
+        },
+        "localhost": true,
+        "country": "",
+        "mac": {
+          "address": "02:00:5E:00:00:01",
+          "name": "laptop.lan"
+        },
+        "ip": "192.0.2.4",
+        "device_type": 8
+      },
+      "last_seen": 1792778907
+    },
+    {
+      "first_seen": 1792778779,
+      "alerts": 0,
+      "score": 0,
+      "num_flows": 0,
+      "throughput": {
+        "bps": 0.0,
+        "type": "bps",
+        "pps": 0.0,
+        "trend": 3
+      },
+      "hostname": {
+        "alt_name": "",
+        "name": ""
+      },
+      "isBlocked": false,
+      "bytes": {
+        "rcvd": 0,
+        "sent": 214,
+        "total": 214
+      },
+      "host": {
+        "os": 0,
+        "vlan": {
+          "id": 0,
+          "name": ""
+        },
+        "localhost": true,
+        "country": "",
+        "mac": {
+          "address": "02:00:5E:00:00:02",
+          "name": "gateway"
+        },
+        "ip": "fe80::1",
+        "device_type": 0
+      },
+      "last_seen": 1792778910
+    },
+    {
+      "first_seen": 1792778749,
+      "alerts": 0,
+      "score": 1366,
+      "num_flows": 26,
+      "throughput": {
+        "bps": 303.02462768555,
+        "type": "bps",
+        "pps": 2.068035364151,
+        "trend": 2
+      },
+      "hostname": {
+        "alt_name": "",
+        "name": "client.lan"
+      },
+      "isBlocked": false,
+      "bytes": {
+        "rcvd": 488542,
+        "sent": 438534,
+        "total": 927076
+      },
+      "host": {
+        "os": 5,
+        "vlan": {
+          "id": 0,
+          "name": ""
+        },
+        "localhost": true,
+        "country": "",
+        "mac": {
+          "address": "02:00:5E:00:00:03",
+          "name": "client.lan"
+        },
+        "ip": "192.0.2.3",
+        "device_type": 3
+      },
+      "last_seen": 1792779001
+    },
+    {
+      "first_seen": 1792778748,
+      "alerts": 0,
+      "score": 0,
+      "num_flows": 2,
+      "throughput": {
+        "bps": 6.1466608047485,
+        "type": "bps",
+        "pps": 0.057445425540209,
+        "trend": 2
+      },
+      "hostname": {
+        "alt_name": "",
+        "name": "gateway"
+      },
+      "isBlocked": false,
+      "bytes": {
+        "rcvd": 0,
+        "sent": 1377,
+        "total": 1377
+      },
+      "host": {
+        "os": 0,
+        "vlan": {
+          "id": 0,
+          "name": ""
+        },
+        "localhost": true,
+        "country": "",
+        "mac": {
+          "address": "02:00:5E:00:00:04",
+          "name": "gateway"
+        },
+        "ip": "fe80::2",
+        "device_type": 0
+      },
+      "last_seen": 1792779014
+    },
+    {
+      "first_seen": 1792778748,
+      "alerts": 0,
+      "score": 254,
+      "num_flows": 26,
+      "throughput": {
+        "bps": 303.02462768555,
+        "type": "bps",
+        "pps": 2.068035364151,
+        "trend": 2
+      },
+      "hostname": {
+        "alt_name": "",
+        "name": "ntopng"
+      },
+      "isBlocked": false,
+      "bytes": {
+        "rcvd": 773786,
+        "sent": 815770,
+        "total": 1589556
+      },
+      "host": {
+        "os": 5,
+        "vlan": {
+          "id": 0,
+          "name": ""
+        },
+        "mac": {
+          "address": "02:00:5E:00:00:05",
+          "name": "ntopng"
+        },
+        "localhost": true,
+        "device_type": 3,
+        "country": "",
+        "ip": "192.0.2.2",
+        "system_host": true
+      },
+      "last_seen": 1792779001
+    },
+    {
+      "first_seen": 1792778748,
+      "alerts": 0,
+      "score": 0,
+      "num_flows": 0,
+      "throughput": {
+        "bps": 0.0,
+        "type": "bps",
+        "pps": 0.0,
+        "trend": 3
+      },
+      "hostname": {
+        "alt_name": "",
+        "name": "gateway"
+      },
+      "isBlocked": false,
+      "bytes": {
+        "rcvd": 0,
+        "sent": 3436,
+        "total": 3436
+      },
+      "host": {
+        "os": 0,
+        "vlan": {
+          "id": 0,
+          "name": ""
+        },
+        "localhost": true,
+        "country": "",
+        "mac": {
+          "address": "02:00:5E:00:00:02",
+          "name": "gateway"
+        },
+        "ip": "192.0.2.1",
+        "device_type": 8
+      },
+      "last_seen": 1792778915
+    }
+  ]
+}

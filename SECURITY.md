@@ -30,6 +30,17 @@ Gladys before reporting a problem.
 
 In scope: the code of this repository and the Docker image it publishes.
 
+The integration reads the REST API of the ntopng configured in Gladys, on the
+local network, and never writes to it. The API token, or the user and
+password, are kept by Gladys in the integration configuration, sent only to
+ntopng in an `Authorization` header, and never logged. Over plain HTTP they
+cross the network in clear (ntopng itself flags it as "Clear-Text
+Credentials"): prefer HTTPS and an API token. Under `/data`, the integration
+keeps one file: per interface, the last flow alert read, the engaged alerts
+and the local hosts already seen (MAC or IP address, and when they were last
+seen), so that a restart neither misses nor repeats an event. No credential is
+stored there.
+
 Out of scope: Gladys Assistant itself (see its
 [security policy](https://github.com/GladysAssistant/Gladys/security/policy)),
-and the third-party services and devices the integration talks to.
+ntopng, and the networks it monitors.

@@ -1,0 +1,844 @@
+{
+  "rsp": {
+    "records": [
+      {
+        "flow_related_info": {
+          "descr": " [ Server to Client Traffic: 54 Bytes | Client to Server Traffic: 58 Bytes ]"
+        },
+        "tags": [],
+        "exporter_ip": {
+          "label": "",
+          "value": ""
+        },
+        "cli_ip": {
+          "value": "192.0.2.3",
+          "country": "",
+          "label": "client.lan",
+          "ip": "192.0.2.3",
+          "label_long": "client.lan",
+          "blacklisted": "0",
+          "reference": "<a href='/lua/host_details.lua?host=192.0.2.3' data-bs-toggle='tooltip' data-bs-placement='top' title=''><i class='fas fa-laptop'></i></a>",
+          "location": "local",
+          "name": "client.lan"
+        },
+        "cli_host_pool_id": {
+          "label": "Default",
+          "value": "0"
+        },
+        "description": {
+          "descr": "TCP probing attempt"
+        },
+        "info": {
+          "label": "",
+          "value": ""
+        },
+        "score": {
+          "label": "110",
+          "value": 110,
+          "color": "#ff3231"
+        },
+        "cli_port": {
+          "label": "34583",
+          "value": "34583"
+        },
+        "row_id": "4407",
+        "duration": 105,
+        "tstamp": {
+          "label": "18:06:01",
+          "value": 1792778761,
+          "highlight": "#ff3231",
+          "title": "18:06:01 - 18:07:46"
+        },
+        "msg": {
+          "value": 101,
+          "name": "Probing Attempt",
+          "configset_ref": " <a href=\"/lua/admin/edit_configset.lua?subdir=flow&check=Probing+Attempt#all\"><i class=\"fas fa-cog\" title=\"Edit Configuration\"></i></a>",
+          "description": "TCP probing attempt",
+          "fullname": "Probing Attempt"
+        },
+        "srv_host_pool_id": {
+          "label": "Default",
+          "value": "0"
+        },
+        "severity": {
+          "label": "<i class='fas fa-exclamation-triangle text-danger' style='color: #ff3231!important' title='Error'></i> ",
+          "value": 5,
+          "color": "#ff3231"
+        },
+        "total_bytes": {
+          "bytes_sent": 58,
+          "total_packets": 2,
+          "total_bytes": 112,
+          "bytes_rcvd": 54
+        },
+        "cli_network": {
+          "label": "192.0.2.0/24",
+          "value": "1"
+        },
+        "family": "flow",
+        "srv_network": {
+          "label": "192.0.2.0/24",
+          "value": "1"
+        },
+        "alert_id": {
+          "label": "Probing Attempt",
+          "value": "101"
+        },
+        "alert_category": {
+          "label": "Cybersecurity",
+          "value": "1",
+          "icon": "fas fa-shield-alt"
+        },
+        "alert_name": "Probing Attempt",
+        "mitre_data": {
+          "mitre_tactic": "",
+          "mitre_tactic_i18n": "",
+          "mitre_id": "",
+          "mitre_technique_i18n": "",
+          "mitre_technique": "",
+          "mitre_subtechnique": "",
+          "mitre_subtechnique_i18n": ""
+        },
+        "l7_proto": {
+          "label": "TCP:Unknown",
+          "value": "0",
+          "l7_label": "Unknown",
+          "l4_label": "TCP"
+        },
+        "srv_port": {
+          "label": "2209",
+          "value": "2209"
+        },
+        "proto": {
+          "label": "TCP",
+          "value": "6"
+        },
+        "additional_alerts": {
+          "descr": "TCP Connection Issues  <a href=\"https://www.ntop.org/guides/ntopng/user_interface/shared/alerts/remediations/ndpi_flow_risks.html#risk-050\" target=\"_blank\"><i class=\"fa-solid fa-lg fa-briefcase-medical\"></i></a><br>TCP No Data Exchanged "
+        },
+        "community_id": {
+          "name": "1:VCWZmPVGU1JsYaJEfJ8kfoTdT+0=",
+          "value": "1:VCWZmPVGU1JsYaJEfJ8kfoTdT+0="
+        },
+        "filter": {
+          "epoch_begin": 1792778761,
+          "bpf": "host 192.0.2.3 and host 192.0.2.2 and port 34583 and port 2209",
+          "tag_filters": [
+            {
+              "op": "eq",
+              "value": "101",
+              "id": "alert_id"
+            },
+            {
+              "op": "eq",
+              "value": "192.0.2.3",
+              "id": "cli_ip"
+            },
+            {
+              "op": "eq",
+              "value": "192.0.2.2",
+              "id": "srv_ip"
+            },
+            {
+              "op": "eq",
+              "value": "34583",
+              "id": "cli_port"
+            },
+            {
+              "op": "eq",
+              "value": "2209",
+              "id": "srv_port"
+            }
+          ],
+          "epoch_end": 1792778867
+        },
+        "count": 1,
+        "srv_ip": {
+          "value": "192.0.2.2",
+          "country": "",
+          "label": "ntopng",
+          "ip": "192.0.2.2",
+          "label_long": "ntopng",
+          "blacklisted": "0",
+          "reference": "<a href='/lua/host_details.lua?host=192.0.2.2' data-bs-toggle='tooltip' data-bs-placement='top' title=''><i class='fas fa-laptop'></i></a>",
+          "location": "local",
+          "name": "ntopng"
+        },
+        "flow": {
+          "cli_ip": {
+            "value": "192.0.2.3",
+            "country": "",
+            "label": "client.lan",
+            "ip": "192.0.2.3",
+            "label_long": "client.lan",
+            "blacklisted": "0",
+            "reference": "<a href='/lua/host_details.lua?host=192.0.2.3' data-bs-toggle='tooltip' data-bs-placement='top' title=''><i class='fas fa-laptop'></i></a>",
+            "location": "local",
+            "name": "client.lan"
+          },
+          "srv_ip": {
+            "value": "192.0.2.2",
+            "country": "",
+            "label": "ntopng",
+            "ip": "192.0.2.2",
+            "label_long": "ntopng",
+            "blacklisted": "0",
+            "reference": "<a href='/lua/host_details.lua?host=192.0.2.2' data-bs-toggle='tooltip' data-bs-placement='top' title=''><i class='fas fa-laptop'></i></a>",
+            "location": "local",
+            "name": "ntopng"
+          },
+          "vlan": {
+            "label": "",
+            "value": 0,
+            "title": ""
+          },
+          "active_url": "",
+          "cli_port": {
+            "label": "34583",
+            "value": "34583"
+          },
+          "srv_port": {
+            "label": "2209",
+            "value": "2209"
+          }
+        },
+        "vlan_id": {
+          "label": "",
+          "value": 0,
+          "title": ""
+        }
+      },
+      {
+        "flow_related_info": {
+          "descr": " [ Server to Client Traffic: 54 Bytes | Client to Server Traffic: 58 Bytes ]"
+        },
+        "tags": [],
+        "exporter_ip": {
+          "label": "",
+          "value": ""
+        },
+        "cli_ip": {
+          "value": "192.0.2.3",
+          "country": "",
+          "label": "client.lan",
+          "ip": "192.0.2.3",
+          "label_long": "client.lan",
+          "blacklisted": "0",
+          "reference": "<a href='/lua/host_details.lua?host=192.0.2.3' data-bs-toggle='tooltip' data-bs-placement='top' title=''><i class='fas fa-laptop'></i></a>",
+          "location": "local",
+          "name": "client.lan"
+        },
+        "cli_host_pool_id": {
+          "label": "Default",
+          "value": "0"
+        },
+        "description": {
+          "descr": "TCP probing attempt"
+        },
+        "info": {
+          "label": "",
+          "value": ""
+        },
+        "score": {
+          "label": "110",
+          "value": 110,
+          "color": "#ff3231"
+        },
+        "cli_port": {
+          "label": "34583",
+          "value": "34583"
+        },
+        "row_id": "4406",
+        "duration": 105,
+        "tstamp": {
+          "label": "18:06:01",
+          "value": 1792778761,
+          "highlight": "#ff3231",
+          "title": "18:06:01 - 18:07:46"
+        },
+        "msg": {
+          "value": 101,
+          "name": "Probing Attempt",
+          "configset_ref": " <a href=\"/lua/admin/edit_configset.lua?subdir=flow&check=Probing+Attempt#all\"><i class=\"fas fa-cog\" title=\"Edit Configuration\"></i></a>",
+          "description": "TCP probing attempt",
+          "fullname": "Probing Attempt"
+        },
+        "srv_host_pool_id": {
+          "label": "Default",
+          "value": "0"
+        },
+        "severity": {
+          "label": "<i class='fas fa-exclamation-triangle text-danger' style='color: #ff3231!important' title='Error'></i> ",
+          "value": 5,
+          "color": "#ff3231"
+        },
+        "total_bytes": {
+          "bytes_sent": 58,
+          "total_packets": 2,
+          "total_bytes": 112,
+          "bytes_rcvd": 54
+        },
+        "cli_network": {
+          "label": "192.0.2.0/24",
+          "value": "1"
+        },
+        "family": "flow",
+        "srv_network": {
+          "label": "192.0.2.0/24",
+          "value": "1"
+        },
+        "alert_id": {
+          "label": "Probing Attempt",
+          "value": "101"
+        },
+        "alert_category": {
+          "label": "Cybersecurity",
+          "value": "1",
+          "icon": "fas fa-shield-alt"
+        },
+        "alert_name": "Probing Attempt",
+        "mitre_data": {
+          "mitre_tactic": "",
+          "mitre_tactic_i18n": "",
+          "mitre_id": "",
+          "mitre_technique_i18n": "",
+          "mitre_technique": "",
+          "mitre_subtechnique": "",
+          "mitre_subtechnique_i18n": ""
+        },
+        "l7_proto": {
+          "label": "TCP:Unknown",
+          "value": "0",
+          "l7_label": "Unknown",
+          "l4_label": "TCP"
+        },
+        "srv_port": {
+          "label": "1953",
+          "value": "1953"
+        },
+        "proto": {
+          "label": "TCP",
+          "value": "6"
+        },
+        "additional_alerts": {
+          "descr": "TCP Connection Issues  <a href=\"https://www.ntop.org/guides/ntopng/user_interface/shared/alerts/remediations/ndpi_flow_risks.html#risk-050\" target=\"_blank\"><i class=\"fa-solid fa-lg fa-briefcase-medical\"></i></a><br>TCP No Data Exchanged "
+        },
+        "community_id": {
+          "name": "1:7jhqEjdfhyUC/0uL0arKqN1EbXU=",
+          "value": "1:7jhqEjdfhyUC/0uL0arKqN1EbXU="
+        },
+        "filter": {
+          "epoch_begin": 1792778761,
+          "bpf": "host 192.0.2.3 and host 192.0.2.2 and port 34583 and port 1953",
+          "tag_filters": [
+            {
+              "op": "eq",
+              "value": "101",
+              "id": "alert_id"
+            },
+            {
+              "op": "eq",
+              "value": "192.0.2.3",
+              "id": "cli_ip"
+            },
+            {
+              "op": "eq",
+              "value": "192.0.2.2",
+              "id": "srv_ip"
+            },
+            {
+              "op": "eq",
+              "value": "34583",
+              "id": "cli_port"
+            },
+            {
+              "op": "eq",
+              "value": "1953",
+              "id": "srv_port"
+            }
+          ],
+          "epoch_end": 1792778867
+        },
+        "count": 1,
+        "srv_ip": {
+          "value": "192.0.2.2",
+          "country": "",
+          "label": "ntopng",
+          "ip": "192.0.2.2",
+          "label_long": "ntopng",
+          "blacklisted": "0",
+          "reference": "<a href='/lua/host_details.lua?host=192.0.2.2' data-bs-toggle='tooltip' data-bs-placement='top' title=''><i class='fas fa-laptop'></i></a>",
+          "location": "local",
+          "name": "ntopng"
+        },
+        "flow": {
+          "cli_ip": {
+            "value": "192.0.2.3",
+            "country": "",
+            "label": "client.lan",
+            "ip": "192.0.2.3",
+            "label_long": "client.lan",
+            "blacklisted": "0",
+            "reference": "<a href='/lua/host_details.lua?host=192.0.2.3' data-bs-toggle='tooltip' data-bs-placement='top' title=''><i class='fas fa-laptop'></i></a>",
+            "location": "local",
+            "name": "client.lan"
+          },
+          "srv_ip": {
+            "value": "192.0.2.2",
+            "country": "",
+            "label": "ntopng",
+            "ip": "192.0.2.2",
+            "label_long": "ntopng",
+            "blacklisted": "0",
+            "reference": "<a href='/lua/host_details.lua?host=192.0.2.2' data-bs-toggle='tooltip' data-bs-placement='top' title=''><i class='fas fa-laptop'></i></a>",
+            "location": "local",
+            "name": "ntopng"
+          },
+          "vlan": {
+            "label": "",
+            "value": 0,
+            "title": ""
+          },
+          "active_url": "",
+          "cli_port": {
+            "label": "34583",
+            "value": "34583"
+          },
+          "srv_port": {
+            "label": "1953",
+            "value": "1953"
+          }
+        },
+        "vlan_id": {
+          "label": "",
+          "value": 0,
+          "title": ""
+        }
+      },
+      {
+        "flow_related_info": {
+          "descr": " [ Server to Client Traffic: 54 Bytes | Client to Server Traffic: 58 Bytes ]"
+        },
+        "tags": [],
+        "exporter_ip": {
+          "label": "",
+          "value": ""
+        },
+        "cli_ip": {
+          "value": "192.0.2.3",
+          "country": "",
+          "label": "client.lan",
+          "ip": "192.0.2.3",
+          "label_long": "client.lan",
+          "blacklisted": "0",
+          "reference": "<a href='/lua/host_details.lua?host=192.0.2.3' data-bs-toggle='tooltip' data-bs-placement='top' title=''><i class='fas fa-laptop'></i></a>",
+          "location": "local",
+          "name": "client.lan"
+        },
+        "cli_host_pool_id": {
+          "label": "Default",
+          "value": "0"
+        },
+        "description": {
+          "descr": "TCP probing attempt"
+        },
+        "info": {
+          "label": "",
+          "value": ""
+        },
+        "score": {
+          "label": "110",
+          "value": 110,
+          "color": "#ff3231"
+        },
+        "cli_port": {
+          "label": "34583",
+          "value": "34583"
+        },
+        "row_id": "4405",
+        "duration": 105,
+        "tstamp": {
+          "label": "18:06:01",
+          "value": 1792778761,
+          "highlight": "#ff3231",
+          "title": "18:06:01 - 18:07:46"
+        },
+        "msg": {
+          "value": 101,
+          "name": "Probing Attempt",
+          "configset_ref": " <a href=\"/lua/admin/edit_configset.lua?subdir=flow&check=Probing+Attempt#all\"><i class=\"fas fa-cog\" title=\"Edit Configuration\"></i></a>",
+          "description": "TCP probing attempt",
+          "fullname": "Probing Attempt"
+        },
+        "srv_host_pool_id": {
+          "label": "Default",
+          "value": "0"
+        },
+        "severity": {
+          "label": "<i class='fas fa-exclamation-triangle text-danger' style='color: #ff3231!important' title='Error'></i> ",
+          "value": 5,
+          "color": "#ff3231"
+        },
+        "total_bytes": {
+          "bytes_sent": 58,
+          "total_packets": 2,
+          "total_bytes": 112,
+          "bytes_rcvd": 54
+        },
+        "cli_network": {
+          "label": "192.0.2.0/24",
+          "value": "1"
+        },
+        "family": "flow",
+        "srv_network": {
+          "label": "192.0.2.0/24",
+          "value": "1"
+        },
+        "alert_id": {
+          "label": "Probing Attempt",
+          "value": "101"
+        },
+        "alert_category": {
+          "label": "Cybersecurity",
+          "value": "1",
+          "icon": "fas fa-shield-alt"
+        },
+        "alert_name": "Probing Attempt",
+        "mitre_data": {
+          "mitre_tactic": "",
+          "mitre_tactic_i18n": "",
+          "mitre_id": "",
+          "mitre_technique_i18n": "",
+          "mitre_technique": "",
+          "mitre_subtechnique": "",
+          "mitre_subtechnique_i18n": ""
+        },
+        "l7_proto": {
+          "label": "TCP:Unknown",
+          "value": "0",
+          "l7_label": "Unknown",
+          "l4_label": "TCP"
+        },
+        "srv_port": {
+          "label": "1825",
+          "value": "1825"
+        },
+        "proto": {
+          "label": "TCP",
+          "value": "6"
+        },
+        "additional_alerts": {
+          "descr": "TCP Connection Issues  <a href=\"https://www.ntop.org/guides/ntopng/user_interface/shared/alerts/remediations/ndpi_flow_risks.html#risk-050\" target=\"_blank\"><i class=\"fa-solid fa-lg fa-briefcase-medical\"></i></a><br>TCP No Data Exchanged "
+        },
+        "community_id": {
+          "name": "1:fU8uH+ivavbmR4hK7O2lhK/Nm6M=",
+          "value": "1:fU8uH+ivavbmR4hK7O2lhK/Nm6M="
+        },
+        "filter": {
+          "epoch_begin": 1792778761,
+          "bpf": "host 192.0.2.3 and host 192.0.2.2 and port 34583 and port 1825",
+          "tag_filters": [
+            {
+              "op": "eq",
+              "value": "101",
+              "id": "alert_id"
+            },
+            {
+              "op": "eq",
+              "value": "192.0.2.3",
+              "id": "cli_ip"
+            },
+            {
+              "op": "eq",
+              "value": "192.0.2.2",
+              "id": "srv_ip"
+            },
+            {
+              "op": "eq",
+              "value": "34583",
+              "id": "cli_port"
+            },
+            {
+              "op": "eq",
+              "value": "1825",
+              "id": "srv_port"
+            }
+          ],
+          "epoch_end": 1792778867
+        },
+        "count": 1,
+        "srv_ip": {
+          "value": "192.0.2.2",
+          "country": "",
+          "label": "ntopng",
+          "ip": "192.0.2.2",
+          "label_long": "ntopng",
+          "blacklisted": "0",
+          "reference": "<a href='/lua/host_details.lua?host=192.0.2.2' data-bs-toggle='tooltip' data-bs-placement='top' title=''><i class='fas fa-laptop'></i></a>",
+          "location": "local",
+          "name": "ntopng"
+        },
+        "flow": {
+          "cli_ip": {
+            "value": "192.0.2.3",
+            "country": "",
+            "label": "client.lan",
+            "ip": "192.0.2.3",
+            "label_long": "client.lan",
+            "blacklisted": "0",
+            "reference": "<a href='/lua/host_details.lua?host=192.0.2.3' data-bs-toggle='tooltip' data-bs-placement='top' title=''><i class='fas fa-laptop'></i></a>",
+            "location": "local",
+            "name": "client.lan"
+          },
+          "srv_ip": {
+            "value": "192.0.2.2",
+            "country": "",
+            "label": "ntopng",
+            "ip": "192.0.2.2",
+            "label_long": "ntopng",
+            "blacklisted": "0",
+            "reference": "<a href='/lua/host_details.lua?host=192.0.2.2' data-bs-toggle='tooltip' data-bs-placement='top' title=''><i class='fas fa-laptop'></i></a>",
+            "location": "local",
+            "name": "ntopng"
+          },
+          "vlan": {
+            "label": "",
+            "value": 0,
+            "title": ""
+          },
+          "active_url": "",
+          "cli_port": {
+            "label": "34583",
+            "value": "34583"
+          },
+          "srv_port": {
+            "label": "1825",
+            "value": "1825"
+          }
+        },
+        "vlan_id": {
+          "label": "",
+          "value": 0,
+          "title": ""
+        }
+      },
+      {
+        "flow_related_info": {
+          "descr": " [ Server to Client Traffic: 54 Bytes | Client to Server Traffic: 58 Bytes ]"
+        },
+        "tags": [],
+        "exporter_ip": {
+          "label": "",
+          "value": ""
+        },
+        "cli_ip": {
+          "value": "192.0.2.3",
+          "country": "",
+          "label": "client.lan",
+          "ip": "192.0.2.3",
+          "label_long": "client.lan",
+          "blacklisted": "0",
+          "reference": "<a href='/lua/host_details.lua?host=192.0.2.3' data-bs-toggle='tooltip' data-bs-placement='top' title=''><i class='fas fa-laptop'></i></a>",
+          "location": "local",
+          "name": "client.lan"
+        },
+        "cli_host_pool_id": {
+          "label": "Default",
+          "value": "0"
+        },
+        "description": {
+          "descr": "TCP probing attempt"
+        },
+        "info": {
+          "label": "",
+          "value": ""
+        },
+        "score": {
+          "label": "110",
+          "value": 110,
+          "color": "#ff3231"
+        },
+        "cli_port": {
+          "label": "34583",
+          "value": "34583"
+        },
+        "row_id": "4404",
+        "duration": 105,
+        "tstamp": {
+          "label": "18:06:01",
+          "value": 1792778761,
+          "highlight": "#ff3231",
+          "title": "18:06:01 - 18:07:46"
+        },
+        "msg": {
+          "value": 101,
+          "name": "Probing Attempt",
+          "configset_ref": " <a href=\"/lua/admin/edit_configset.lua?subdir=flow&check=Probing+Attempt#all\"><i class=\"fas fa-cog\" title=\"Edit Configuration\"></i></a>",
+          "description": "TCP probing attempt",
+          "fullname": "Probing Attempt"
+        },
+        "srv_host_pool_id": {
+          "label": "Default",
+          "value": "0"
+        },
+        "severity": {
+          "label": "<i class='fas fa-exclamation-triangle text-danger' style='color: #ff3231!important' title='Error'></i> ",
+          "value": 5,
+          "color": "#ff3231"
+        },
+        "total_bytes": {
+          "bytes_sent": 58,
+          "total_packets": 2,
+          "total_bytes": 112,
+          "bytes_rcvd": 54
+        },
+        "cli_network": {
+          "label": "192.0.2.0/24",
+          "value": "1"
+        },
+        "family": "flow",
+        "srv_network": {
+          "label": "192.0.2.0/24",
+          "value": "1"
+        },
+        "alert_id": {
+          "label": "Probing Attempt",
+          "value": "101"
+        },
+        "alert_category": {
+          "label": "Cybersecurity",
+          "value": "1",
+          "icon": "fas fa-shield-alt"
+        },
+        "alert_name": "Probing Attempt",
+        "mitre_data": {
+          "mitre_tactic": "",
+          "mitre_tactic_i18n": "",
+          "mitre_id": "",
+          "mitre_technique_i18n": "",
+          "mitre_technique": "",
+          "mitre_subtechnique": "",
+          "mitre_subtechnique_i18n": ""
+        },
+        "l7_proto": {
+          "label": "TCP:Unknown",
+          "value": "0",
+          "l7_label": "Unknown",
+          "l4_label": "TCP"
+        },
+        "srv_port": {
+          "label": "1697",
+          "value": "1697"
+        },
+        "proto": {
+          "label": "TCP",
+          "value": "6"
+        },
+        "additional_alerts": {
+          "descr": "TCP Connection Issues  <a href=\"https://www.ntop.org/guides/ntopng/user_interface/shared/alerts/remediations/ndpi_flow_risks.html#risk-050\" target=\"_blank\"><i class=\"fa-solid fa-lg fa-briefcase-medical\"></i></a><br>TCP No Data Exchanged "
+        },
+        "community_id": {
+          "name": "1:H2AxTkPJSDaUYroAPBofhwUsvBI=",
+          "value": "1:H2AxTkPJSDaUYroAPBofhwUsvBI="
+        },
+        "filter": {
+          "epoch_begin": 1792778761,
+          "bpf": "host 192.0.2.3 and host 192.0.2.2 and port 34583 and port 1697",
+          "tag_filters": [
+            {
+              "op": "eq",
+              "value": "101",
+              "id": "alert_id"
+            },
+            {
+              "op": "eq",
+              "value": "192.0.2.3",
+              "id": "cli_ip"
+            },
+            {
+              "op": "eq",
+              "value": "192.0.2.2",
+              "id": "srv_ip"
+            },
+            {
+              "op": "eq",
+              "value": "34583",
+              "id": "cli_port"
+            },
+            {
+              "op": "eq",
+              "value": "1697",
+              "id": "srv_port"
+            }
+          ],
+          "epoch_end": 1792778867
+        },
+        "count": 1,
+        "srv_ip": {
+          "value": "192.0.2.2",
+          "country": "",
+          "label": "ntopng",
+          "ip": "192.0.2.2",
+          "label_long": "ntopng",
+          "blacklisted": "0",
+          "reference": "<a href='/lua/host_details.lua?host=192.0.2.2' data-bs-toggle='tooltip' data-bs-placement='top' title=''><i class='fas fa-laptop'></i></a>",
+          "location": "local",
+          "name": "ntopng"
+        },
+        "flow": {
+          "cli_ip": {
+            "value": "192.0.2.3",
+            "country": "",
+            "label": "client.lan",
+            "ip": "192.0.2.3",
+            "label_long": "client.lan",
+            "blacklisted": "0",
+            "reference": "<a href='/lua/host_details.lua?host=192.0.2.3' data-bs-toggle='tooltip' data-bs-placement='top' title=''><i class='fas fa-laptop'></i></a>",
+            "location": "local",
+            "name": "client.lan"
+          },
+          "srv_ip": {
+            "value": "192.0.2.2",
+            "country": "",
+            "label": "ntopng",
+            "ip": "192.0.2.2",
+            "label_long": "ntopng",
+            "blacklisted": "0",
+            "reference": "<a href='/lua/host_details.lua?host=192.0.2.2' data-bs-toggle='tooltip' data-bs-placement='top' title=''><i class='fas fa-laptop'></i></a>",
+            "location": "local",
+            "name": "ntopng"
+          },
+          "vlan": {
+            "label": "",
+            "value": 0,
+            "title": ""
+          },
+          "active_url": "",
+          "cli_port": {
+            "label": "34583",
+            "value": "34583"
+          },
+          "srv_port": {
+            "label": "1697",
+            "value": "1697"
+          }
+        },
+        "vlan_id": {
+          "label": "",
+          "value": 0,
+          "title": ""
+        }
+      }
+    ],
+    "stats": {
+      "num_records_processed": "Processed 971 records [25,686 records/sec]",
+      "query_duration_msec": 37.802934646606,
+      "query": " SELECT 4 entity_id, (tstamp_end - tstamp) duration, *, (srv2cli_bytes + cli2srv_bytes) total_bytes, hex(alerts_map) alerts_map FROM `flow_alerts` WHERE (rowid > 3436) ORDER BY rowid desc LIMIT 4 "
+    }
+  },
+  "rc_str": "OK",
+  "rc": 0,
+  "rc_str_hr": "Success",
+  "recordsFiltered": 970,
+  "recordsTotal": 970
+}

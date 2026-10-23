@@ -1,0 +1,15 @@
+{
+  "rsp": [
+    {
+      "is_pcap_interface": false,
+      "ifname": "eth0",
+      "ifid": 0,
+      "is_zmq_interface": false,
+      "name": "eth0",
+      "is_packet_interface": true
+    }
+  ],
+  "rc_str": "OK",
+  "rc": 0,
+  "rc_str_hr": "Success"
+}

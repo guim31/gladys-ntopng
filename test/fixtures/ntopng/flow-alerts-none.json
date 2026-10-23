@@ -1,0 +1,15 @@
+{
+  "rc_str_hr": "Success",
+  "recordsTotal": 0,
+  "rsp": {
+    "stats": {
+      "num_records_processed": "Processed 0 records [0 records/sec]",
+      "query": " SELECT 4 entity_id, (tstamp_end - tstamp) duration, *, (srv2cli_bytes + cli2srv_bytes) total_bytes, hex(alerts_map) alerts_map FROM `flow_alerts` WHERE (rowid > 999999) ORDER BY rowid desc LIMIT 200 ",
+      "query_duration_msec": 25.524854660034
+    },
+    "records": []
+  },
+  "rc": 0,
+  "rc_str": "OK",
+  "recordsFiltered": 0
+}
